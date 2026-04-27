@@ -1,26 +1,108 @@
 ---
 title: "/riper-goals"
-description: "(WIP) Define module goals and success criteria during RIPER planning"
+description: "Define a module's goals, success criteria, and explicit non-goals"
 ---
 
 # /riper-goals
 
-<Note>
-This page is a placeholder. Real content coming soon.
-</Note>
+This is the Stage 1 prompt that runs after a green-light [/riper-fit](/backend/prompts/riper-fit) verdict. It produces the goals and success criteria block that anchors every later phase of [RIPER](/backend/workflow/riper) and lands inside the [module manifest](/backend/workflow/module-manifest).
+
+Goals come before alternatives. You decide what success looks like before you decide how to get there. If the goals are vague, every later phase amplifies the vagueness.
 
 ## When to use
 
-TBD
+- After a green-light [/riper-fit](/backend/prompts/riper-fit) verdict.
+- When entering RIPER's Plan or Execute phase and you need explicit goals before designing further.
+- When you have a vague feeling of "what this module is for" and need to make it tight.
+
+For the full RIPER protocol context, see [RIPER](/backend/workflow/riper).
 
 ## The prompt
 
-TBD
+```
+You are Opus running Stage 1 RIPER. Mode: thinking only. No code in this turn.
+
+Below this prompt I will paste the green-light fit-check verdict and any prior
+planning context (existing manifest sections, related ADRs, constraints).
+
+Your job: produce a structured goals section for this module. Output exactly
+the five fields below, in this order, as a markdown block ready to paste into
+the module manifest.
+
+Required fields:
+
+### Primary goal
+One sentence. Behavior-focused. Describe the outcome a caller of this module
+gets, not the implementation that produces it.
+
+### Secondary goals
+Optional. Maximum three. Each one sentence. Same behavior framing as the
+primary goal. Skip the section if there are none.
+
+### Explicit non-goals
+Maximum five. Each item starts with "We will not". Pick non-goals that a
+reasonable teammate might assume are in scope but are not. Boring non-goals
+("we will not rewrite the kernel") are noise; surprising non-goals are signal.
+
+### Success criteria
+Three to five items. Each must be falsifiable: a test, a check, or an
+observation that could fail. Tie each criterion to observable behavior, not to
+implementation details. Bad: "uses the new library". Good: "a request with X
+returns Y under Z conditions".
+
+### Wave fit confirmation
+One sentence. Confirm that the goal set is appropriate for the project's
+current wave. If the goals imply a higher wave than the project is in, flag
+that explicitly instead of confirming.
+
+Quality bar:
+- Success criteria must be falsifiable. If you cannot imagine a test that
+  fails them, rewrite them.
+- Non-goals must be surprising. If a teammate would never assume the item was
+  in scope, drop it.
+- Do not propose an approach. Do not list trade-offs. Do not pick a tech
+  stack. This prompt only defines what success means.
+
+STOP after the section. Do not proceed to alternatives or design. Wait for
+confirmation.
+```
+
+<Note>
+**TBD — Volta to verify:** the exact prompt wording, the field names, and the output format. The draft above is a structured starting point; Volta's real prompt may use different field labels (e.g. "outcomes" instead of "goals"), include additional context-loading steps, or land in a different file inside the manifest folder.
+</Note>
 
 ## What you get back
 
-TBD
+A markdown section with five sub-headings — primary goal, secondary goals, explicit non-goals, success criteria, wave fit confirmation — ready to drop into the module manifest as the goals block.
+
+This is **input** to RIPER's Innovate and Plan phases. You have not chosen an approach yet. You have chosen what success looks like. The alternatives you generate next must each be measured against these criteria.
+
+<Tip>
+If the goals come back vague ("improve X", "make Y better"), iterate /riper-goals once more and ask for tighter, falsifiable criteria. Vague goals here cost time in every later phase.
+</Tip>
 
 ## What to do next
 
-TBD
+<Steps>
+  <Step title="Read the success criteria first">
+    Are they falsifiable? Could you write a test that fails them? If a criterion sounds aspirational ("good performance", "clean code"), it is not a criterion — it is a hope. Send it back.
+  </Step>
+  <Step title="Read the non-goals">
+    Do they include things a teammate might wrongly assume were in scope? If every non-goal is obvious, the list is not doing work. Ask Opus for surprising non-goals — the ones that prevent scope creep next week.
+  </Step>
+  <Step title="If goals are tight and criteria falsifiable, proceed to /riper-map">
+    Take the goals block to [/riper-map](/backend/prompts/riper-map) to generate alternatives during the Innovate phase.
+  </Step>
+  <Step title="If goals are vague or criteria untestable, re-run /riper-goals">
+    Sharpen the input. Add the failed criteria as anti-examples. Tighten the constraints. Run again.
+  </Step>
+</Steps>
+
+<CardGroup cols={2}>
+  <Card title="/riper-map" href="/backend/prompts/riper-map">
+    The next prompt: generate alternatives during Innovate.
+  </Card>
+  <Card title="Module Manifest" href="/backend/workflow/module-manifest">
+    Where the goals output lands.
+  </Card>
+</CardGroup>

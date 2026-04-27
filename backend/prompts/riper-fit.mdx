@@ -1,26 +1,82 @@
 ---
 title: "/riper-fit"
-description: "(WIP) Fit-check a feature against current project scope and wave"
+description: "Fit-check a feature against current project scope and wave"
 ---
 
 # /riper-fit
 
-<Note>
-This page is a placeholder. Real content coming soon.
-</Note>
+This is the Stage 1 prompt that runs the fit-check before any deeper RIPER planning. It returns a verdict — green-light, redirect, or kill — so you know whether to proceed, re-route, or park the work. For the workflow context this prompt sits inside, see [Fit-check](/backend/workflows/fit-check).
 
 ## When to use
 
-TBD
+- At the start of any new feature or module.
+- When a request feels ambiguous or arrived as a one-line ask.
+- When you're not sure if the work is one module or three.
+- When you feel pressure to "just start coding."
+
+If the request is genuinely obvious, /riper-fit takes thirty seconds. If it isn't, it just saved you a week.
 
 ## The prompt
 
-TBD
+```
+You are Opus running Stage 1 RIPER. Mode: thinking only. You will not write code in this turn.
+
+Constraint: stay project-agnostic in framing. Do not invent specific project names, library names, or vendor choices that the user has not provided. Use only the context the user pastes below this prompt.
+
+The user will paste a feature request below this prompt. Run a fit-check on it. Do not start RIPER planning. Do not produce a manifest or design. Do not write code.
+
+Walk these four questions in order. Write one paragraph per question. Keep each paragraph tight -- three to five sentences.
+
+1. What is the smallest version of this that delivers value? Strip every nice-to-have. Name what the irreducible core is.
+2. What wave (W1, W2, W3, or W4) is this sized for, and does that match the current project wave? If the user has not stated the project's current wave, say so and pick the wave the request implies.
+3. Does this fit the scope of an existing module, or does it need a new module? If it crosses two modules, say which one should own it and why.
+4. Are we sure we want this? Give the one-sentence reason this is worth doing now. If you cannot name a reason, say so plainly.
+
+After the four paragraphs, on the LAST line of your response, write exactly one verdict in this exact format:
+
+  Verdict: GREEN-LIGHT -- proceed to /riper-goals
+  Verdict: REDIRECT -- <one-line reason and where the work belongs instead>
+  Verdict: KILL -- <one-line reason this should not be built>
+
+Stop after the verdict line. Do not proceed to RIPER planning. Do not produce a manifest or design. Do not write code. Wait for the user to confirm the verdict before any next step.
+```
+
+<Note>
+**TBD — Volta to verify:** the exact prompt wording. The version above is a working draft sized to match the four fit-check questions in /backend/workflows/fit-check. Volta's real prompt may include additional context-loading steps (e.g. linking to the project's manifest folder), specific tags or sections, a different output format, or constraints unique to his Obsidian setup.
+</Note>
 
 ## What you get back
 
-TBD
+One of three verdict outputs, each ending with a verdict line on the last line of the response.
+
+- **GREEN-LIGHT** — Opus walks the four questions, returns paragraph answers, and ends with a green-light verdict line. Proceed to [/riper-goals](/backend/prompts/riper-goals).
+- **REDIRECT** — Opus identifies that this work belongs somewhere else (a different module, a different wave, a future quarter). The redirect line tells you where. Re-route and stop the current path.
+- **KILL** — Opus identifies that this work isn't worth doing in its current form. The kill line gives the one-sentence reason. Park it with the reason recorded.
+
+/riper-fit never produces code or design. If Opus drifts into either, paste the prompt again with a stronger "thinking only" constraint.
 
 ## What to do next
 
-TBD
+<Steps>
+  <Step title="Read the verdict line first">
+    The four paragraph answers are context, not the decision. Find the verdict line at the bottom of the response and act on that.
+  </Step>
+  <Step title="If GREEN-LIGHT">
+    Proceed to [/riper-goals](/backend/prompts/riper-goals). The fit-check is done; the next prompt opens the real planning loop.
+  </Step>
+  <Step title="If REDIRECT">
+    Re-route the work to where the verdict points. Stop the current path. Do not start RIPER on the original framing — it would design the wrong thing.
+  </Step>
+  <Step title="If KILL">
+    Record the one-sentence reason somewhere durable (project planning vault) and stop. The reason is what prevents future-you from re-litigating the same idea in three weeks.
+  </Step>
+</Steps>
+
+<CardGroup cols={2}>
+  <Card title="/riper-goals" href="/backend/prompts/riper-goals">
+    The next prompt after a green-light fit-check.
+  </Card>
+  <Card title="Fit-check" href="/backend/workflows/fit-check">
+    The workflow context for /riper-fit.
+  </Card>
+</CardGroup>

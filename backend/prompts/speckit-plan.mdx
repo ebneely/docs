@@ -1,26 +1,146 @@
 ---
 title: "/speckit.plan"
-description: "(WIP) Plan implementation steps, file changes, and test strategy from a spec"
+description: "Plan implementation steps, file changes, and test strategy from a spec"
 ---
 
 # /speckit.plan
 
-<Note>
-This page is a placeholder. Real content coming soon.
-</Note>
+This is the third [SpecKit](/backend/workflow/speckit) prompt. After the spec is clean — zero `[NEEDS DECISION]` markers, all [/speckit.clarify](/backend/prompts/speckit-clarify) items resolved — `/speckit.plan` turns it into a concrete implementation plan.
+
+The plan names every file that will change, every function or handler that will be added, the tests that will cover the work, and the order things get built in. It is the last document before code.
 
 ## When to use
 
-TBD
+- The spec from [/speckit.specify](/backend/prompts/speckit-specify) is clean (zero open questions).
+- All [/speckit.clarify](/backend/prompts/speckit-clarify) items have been answered, in the spec or in the [manifest](/backend/workflow/module-manifest).
+- You're ready to translate "what" into "how" — but not yet "build".
+
+The decision tree at [/backend/decisions/after-plan](/backend/decisions/after-plan) is what you walk after this prompt returns.
 
 ## The prompt
 
-TBD
+```
+You are Sonnet running Stage 2 / SpecKit / plan phase. Mode: implementation
+planner. You will not write code in this turn. You produce only the plan that
+drives code.
+
+Below this prompt I will paste the clean spec. Treat it as the source of truth.
+You may not introduce behavior the spec does not call for.
+
+Your job: produce an implementation plan with exactly the five sections below,
+in this order, as a markdown block.
+
+### File-level changes
+A list of every file that will be created, modified, or deleted. For each
+file:
+- Path (relative to repo root)
+- Change kind: CREATE, MODIFY, or DELETE
+- One-line reason tied to a specific spec behavior
+
+If a directory is created, list it once with kind CREATE and a reason. Do not
+list files you only read.
+
+### Function-level tasks
+Per file from the section above, the functions, handlers, exports, or other
+named units to add or change. For each:
+- Name and signature (parameters and return type, written in the project's
+  source language conventions)
+- One sentence describing what it does
+- Which spec behavior it implements
+
+If a function is being modified rather than added, note what changes.
+
+### Test strategy
+Three sub-lists:
+- Unit tests: behaviors covered by isolated tests, with the function under test
+  named.
+- Integration tests: behaviors covered end-to-end through the module's public
+  surface.
+- Existing coverage: behaviors already covered by tests that live elsewhere
+  in the repo. Name the test file.
+
+Every user story or success criterion in the spec must appear in at least one
+of the three lists. If a story is not covered, list it under "uncovered" with
+a one-line reason.
+
+### Ordering
+A sequenced list of build steps. Each step is one sentence and names the file
+or files it touches. Steps must be ordered so that no step depends on a step
+listed below it. Tests are part of the ordering, not an afterthought.
+
+### Risks
+A list of places where the plan is uncertain or makes a load-bearing
+assumption. Each risk is one line, with a routing tag:
+- INLINE: the risk can be resolved during the build (e.g. a small library
+  choice).
+- STAGE-1-RETURN: the risk implies the spec is incomplete; flag it and stop
+  before building.
+
+Constraints:
+- Stay strictly inside the spec's scope. If the plan reveals the spec is
+  incomplete, STOP, list a STAGE-1-RETURN risk naming the gap, and do not
+  expand the plan to cover the gap.
+- Do not propose architecture changes. Do not pick libraries the manifest has
+  not sanctioned. Do not invent endpoints or entities.
+- The plan must be specific enough that a separate Sonnet session reading
+  only the plan and the spec can execute it without asking the user any new
+  questions.
+
+STOP after the plan. Do not generate code in this turn.
+```
+
+<Note>
+**TBD — Volta to verify:** the exact prompt wording, the field names (file-level / function-level / test strategy / ordering / risks), and the output format. The draft above is a structured starting point; Volta's real prompt may use different field names or land the output in a specific manifest file.
+</Note>
+
+<Note>
+**TBD — Volta to verify:** the relationship between `/speckit.plan` and the actual building step. Three possibilities:
+
+- There's a separate `/speckit.build` that consumes the plan and writes code.
+- Sonnet writes code freely after the plan, no further slash command.
+- There's an iterative loop with [/speckit.analyze](/backend/prompts/speckit-analyze) checking progress as code is written.
+
+This is one of the four Critical TBDs noted on [/backend/workflows/new-module](/backend/workflows/new-module). The page below assumes the plan is a hand-off document; the consumer may be a separate command or a separate Sonnet session.
+</Note>
 
 ## What you get back
 
-TBD
+A plan document with five sections — file-level changes, function-level tasks, test strategy, ordering, risks — plus routing tags on each risk.
+
+Walk [/backend/decisions/after-plan](/backend/decisions/after-plan) before moving on. That tree checks plan-vs-spec alignment, scope creep, and test coverage against the spec's user stories.
+
+If the plan introduces new components or files the spec didn't anticipate, that is a signal — see the [after-plan](/backend/decisions/after-plan) decision tree for whether to absorb the addition or push it back to Stage 1.
+
+<Tip>
+The risks section is the highest-signal part of the output. Read it first. A `STAGE-1-RETURN` risk almost always means the spec was incomplete and you saved yourself a half-built module.
+</Tip>
 
 ## What to do next
 
-TBD
+<Steps>
+  <Step title="Walk the after-plan decision tree">
+    [/backend/decisions/after-plan](/backend/decisions/after-plan) checks plan-vs-spec alignment, scope creep, and test coverage. Run it before anything else.
+  </Step>
+  <Step title="If the plan diverges from the spec">
+    Stop. Return to Stage 1, reconcile the [manifest](/backend/workflow/module-manifest), then re-run [/speckit.specify](/backend/prompts/speckit-specify) and `/speckit.plan` from a clean spec. Do not patch the divergence in place.
+  </Step>
+  <Step title="If a STAGE-1-RETURN risk is listed">
+    Treat it the same as a divergence. Switch to Obsidian with Opus, update the manifest, add an [ADR](/glossary), then restart Stage 2.
+  </Step>
+  <Step title="If the plan is clean">
+    Run [/speckit-scaling](/backend/prompts/speckit-scaling) — the wave-appropriate scaling review.
+  </Step>
+</Steps>
+
+<Warning>
+The [mode lock](/backend/workflow/speckit) applies to plans too. If the plan reveals a design problem, that is Stage 1's problem, not Stage 2's. Patching the plan to dodge a Stage 1 question is exactly what the two-stage workflow is built to prevent.
+</Warning>
+
+<CardGroup cols={2}>
+  <Card title="/speckit-scaling" href="/backend/prompts/speckit-scaling">
+    Next prompt: scaling review against the current wave.
+  </Card>
+  <Card title="After /speckit.plan" href="/backend/decisions/after-plan">
+    Decision tree for handling the plan output.
+  </Card>
+</CardGroup>

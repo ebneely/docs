@@ -1,26 +1,117 @@
 ---
 title: "/speckit.specify"
-description: "(WIP) Generate a detailed module specification from RIPER planning artifacts"
+description: "Generate a detailed module specification from RIPER planning artifacts"
 ---
 
 # /speckit.specify
 
-<Note>
-This page is a placeholder. Real content coming soon.
-</Note>
+This is the first prompt of Stage 2. You run it after Stage 1 is complete — the [module manifest](/backend/workflow/module-manifest) is signed off, the chosen approach is recorded, the wave is declared. /speckit.specify takes those artifacts and produces a structured specification that the rest of the [SpecKit pipeline](/backend/workflow/speckit) reads.
+
+It is also the prompt that tests whether the manifest was actually done. If /speckit.specify produces a spec full of guesses or open questions, the manifest probably was not ready and you are back in Stage 1.
 
 ## When to use
 
-TBD
+- Immediately after Stage 1 is complete and a [module manifest](/backend/workflow/module-manifest) exists
+- Starting any new module's Stage 2
+- After a Stage 2 return-trip to Stage 1 — when the manifest is revised, /speckit.specify re-runs from the updated manifest
+
+Cross-link to [/backend/workflows/new-module](/backend/workflows/new-module) for the workflow context.
+
+The output of /speckit.specify is consumed by every later SpecKit command. Investing in a clean spec here saves rework in [/speckit.clarify](/backend/prompts/speckit-clarify), [/speckit.plan](/backend/prompts/speckit-plan), and downstream.
 
 ## The prompt
 
-TBD
+```
+You are Sonnet running Stage 2 / SpecKit / specify phase. Mode: spec generator. You will not redesign, expand scope, or write code in this turn.
+
+The user will paste the module manifest below this prompt. The manifest is the source of truth. Your job is to expand it into a structured specification that the rest of the Stage 2 pipeline (clarify, plan, scaling, security, analyze) will consume.
+
+Walk the manifest end to end and produce a single markdown document with these sections:
+
+1. Module identity
+   - Name
+   - Scope (one paragraph; what this module owns and what it does not)
+   - Wave (W1, W2, W3, W4) the module is sized for
+
+2. User stories
+   - Extract every user story present in the manifest
+   - For each, list the actor, the action, and the expected outcome
+   - Do not invent stories that are not in the manifest
+
+3. Data model
+   - Entities and their key fields
+   - Relationships between entities
+   - Lifecycle: when each entity is created, mutated, archived
+   - Do not produce DDL, table syntax, or storage-engine specifics
+
+4. API surface
+   - Endpoints with their request and response shapes
+   - Authentication requirements per endpoint
+   - Idempotency guarantees per endpoint
+   - Do not pin exact paths, exact HTTP status codes, or exact error formats - those land in /speckit.plan
+
+5. Behavioral contract
+   - Success path for each user story
+   - Error and edge-case handling
+   - Concurrency assumptions
+   - Observability hooks (what gets logged, what gets metered)
+
+6. Open questions
+   - Anywhere the manifest left a decision unmade, mark it [NEEDS DECISION] with a short description and the reason it matters
+   - If the manifest answers everything, this section says "None"
+
+Constraint: stay inside the manifest's scope. If you find yourself wanting to add a feature, an endpoint, or a behavior the manifest does not mention, that is a Stage 1 return-trip. Flag it under Open questions instead of expanding the spec.
+
+STOP after the spec. Do not produce code, tests, implementation plans, or recommendations. The user will walk the after-specify decision tree to decide what comes next.
+```
+
+<Note>
+**TBD — Volta to verify:** the exact prompt wording. The version above is a working draft that asks for a structured six-section spec composing well with the rest of the SpecKit pipeline. Volta's real prompt may include manifest-folder context-loading steps, custom marker syntax, or different field labels (e.g. "outcomes" instead of "user stories", "interface" instead of "API surface").
+</Note>
+
+<Note>
+**TBD — Volta to verify:** the exact output format /speckit.specify produces — a single markdown document with H2 sections (assumed above), a frontmatter-typed file, structured fields with embedded code blocks, or some other shape. The output format is one of the four Critical TBDs noted on [/backend/workflows/new-module](/backend/workflows/new-module) and is the input contract for every later SpecKit command.
+</Note>
+
+<Note>
+**TBD — Volta to verify:** whether `[NEEDS DECISION]` is the actual marker syntax /speckit.specify produces for unresolved questions. The draft uses `[NEEDS DECISION]` because [/backend/decisions/after-specify](/backend/decisions/after-specify) routes on the same marker. Both are flagged TBD until Volta confirms the convention; if the marker syntax differs, both pages need to change in lockstep.
+</Note>
 
 ## What you get back
 
-TBD
+A structured spec document — six sections in the draft above, possibly different in Volta's real flow (see TBDs). Cross-link [/backend/decisions/after-specify](/backend/decisions/after-specify) for what to do with the output.
+
+The spec is INPUT to two paths:
+
+- **If `[NEEDS DECISION]` markers exist** → run [/speckit.clarify](/backend/prompts/speckit-clarify) to convert them into answerable questions.
+- **If the spec is clean** → run [/speckit.plan](/backend/prompts/speckit-plan) to translate the spec into an implementation plan.
+
+The spec is also a reference document. Later SpecKit commands (clarify, plan, scaling, security, analyze) read it; none of them rewrite it. If a later command surfaces a finding that requires changing the spec, you stop and return to Stage 1, update the manifest, and re-run /speckit.specify — the spec is not patched in place.
+
+If the spec contains many `[NEEDS DECISION]` markers, that is a signal: the manifest was incomplete. Walk the after-specify decision tree before continuing — the right move is often a Stage 1 return-trip rather than running /speckit.clarify on every gap.
 
 ## What to do next
 
-TBD
+<Steps>
+  <Step title="Walk the after-specify decision tree">
+    [/backend/decisions/after-specify](/backend/decisions/after-specify) handles `[NEEDS DECISION]` markers, external-dependency notes, and scope-drift checks.
+  </Step>
+  <Step title="If [NEEDS DECISION] markers exist">
+    Run [/speckit.clarify](/backend/prompts/speckit-clarify) to surface the questions in answerable form. Answer in Stage 1, then re-run /speckit.specify if any answer changes structure.
+  </Step>
+  <Step title="If the spec drifts from the manifest">
+    Stop. Return to Stage 1. Update the manifest with an [ADR](/glossary). Re-run /speckit.specify from the corrected manifest.
+  </Step>
+  <Step title="If the spec is clean">
+    Run [/speckit.plan](/backend/prompts/speckit-plan) to translate the spec into an implementation plan.
+  </Step>
+</Steps>
+
+<CardGroup cols={2}>
+  <Card title="/speckit.clarify" href="/backend/prompts/speckit-clarify">
+    Next prompt if open questions surfaced.
+  </Card>
+  <Card title="After /speckit.specify" href="/backend/decisions/after-specify">
+    Decision tree for handling the spec output.
+  </Card>
+</CardGroup>

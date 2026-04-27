@@ -1,10 +1,60 @@
 ---
 title: "Prompts"
-description: "(WIP) The slash commands used during backend planning and building"
+description: "The slash commands used during backend planning and building"
 ---
 
 # Prompts
 
+Prompt pages document the slash commands you run during the backend workflow. Each page has the same four-section structure: when to use, the prompt itself (copy-paste-ready), what you get back, and what to do next.
+
+The prompts split by stage. RIPER prompts run during [Stage 1](/backend/workflow/mental-model) inside Obsidian against Opus. SpecKit prompts run during Stage 2 inside the project's codebase against Sonnet. You never run a Stage 2 prompt before Stage 1 finishes — see [Mental Model](/backend/workflow/mental-model) for why.
+
+## RIPER prompts (Stage 1)
+
+<CardGroup cols={3}>
+  <Card title="/riper-fit" icon="filter" href="/backend/prompts/riper-fit">
+    Fit-check a request against current scope and wave before deeper planning.
+  </Card>
+  <Card title="/riper-goals" icon="flag" href="/backend/prompts/riper-goals">
+    Define a module's goals, success criteria, and explicit non-goals.
+  </Card>
+  <Card title="/riper-map" icon="compass" href="/backend/prompts/riper-map">
+    Generate alternatives and trade-offs during the Innovate phase.
+  </Card>
+</CardGroup>
+
+## SpecKit prompts (Stage 2)
+
+<CardGroup cols={3}>
+  <Card title="/speckit.specify" icon="file-lines" href="/backend/prompts/speckit-specify">
+    Generate a detailed module specification from RIPER planning artifacts.
+  </Card>
+  <Card title="/speckit.clarify" icon="circle-question" href="/backend/prompts/speckit-clarify">
+    Resolve ambiguities or open questions in a draft spec.
+  </Card>
+  <Card title="/speckit.plan" icon="list-check" href="/backend/prompts/speckit-plan">
+    Plan implementation steps, file changes, and test strategy from a spec.
+  </Card>
+  <Card title="/speckit-scaling" icon="chart-line" href="/backend/prompts/speckit-scaling">
+    Review the module against the current wave's scaling expectations.
+  </Card>
+  <Card title="/speckit-security" icon="shield-halved" href="/backend/prompts/speckit-security">
+    Run a wave-appropriate security review against the module.
+  </Card>
+  <Card title="/speckit.analyze" icon="magnifying-glass-chart" href="/backend/prompts/speckit-analyze">
+    Analyze a built module — coverage, complexity, regressions.
+  </Card>
+</CardGroup>
+
 <Note>
-This page is a placeholder. Real content coming soon.
+SpecKit prompt pages are still WIP. The cards above link to placeholder pages; real prompt content is queued for a later batch once the per-command output formats are confirmed.
 </Note>
+
+## Where these fit in context
+
+These prompts are tools, not goals. They live inside two larger flows:
+
+- **The two-stage workflow** — see [Mental Model](/backend/workflow/mental-model) for why the prompts split into Stage 1 and Stage 2 groups, and why you never cross the boundary mid-module.
+- **The new-module workflow** — see [New module](/backend/workflows/new-module) for the end-to-end recipe that strings these prompts together.
+
+Use the cards above to jump to a specific prompt. Use the workflow links to understand when each prompt fires in the sequence.

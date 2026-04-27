@@ -1,26 +1,151 @@
 ---
 title: "/speckit.analyze"
-description: "(WIP) Analyze a built module — coverage, complexity, regressions"
+description: "Analyze a built module — coverage, complexity, regressions"
 ---
 
 # /speckit.analyze
 
-<Note>
-This page is a placeholder. Real content coming soon.
-</Note>
+This is the final [SpecKit](/backend/workflow/speckit) prompt of the pipeline. After the module is built and the test suite is green, `/speckit.analyze` produces a structured report on coverage, complexity, regression risk, open questions surfaced during the build, and a single ship verdict.
+
+It is a report, not a redesign. If the analysis reveals a structural problem, the verdict sends the module back to Stage 1 — it does not propose code edits.
 
 ## When to use
 
-TBD
+- After the module is built and the test suite is green.
+- Before shipping, as the last gate. See step 9 of [New module](/backend/workflows/new-module).
+- After major refactors that touch multiple modules.
 
 ## The prompt
 
-TBD
+```
+You are Sonnet running Stage 2 / SpecKit / analyze phase. Mode: post-build
+review. You will not modify code in this turn. You produce only a report.
+
+Below this prompt I will provide:
+- The path to the built module (root folder).
+- The clean spec from /speckit.specify.
+- The plan from /speckit.plan.
+- Access to the test output (last green run).
+- Optional: the scaling and security findings if they exist.
+
+Your job: produce a five-section report plus a single verdict line. Output the
+sections in this exact order, as a markdown block.
+
+### Coverage report
+A list of every behavior the spec calls for. For each:
+- Behavior name (a short label tied to a spec user story or success criterion)
+- Covered: YES or NO
+- Where: the test file and test name that exercises it (if YES), or the
+  reason it is unexercised (if NO)
+
+Name unexercised behaviors explicitly. Do not estimate coverage as a
+percentage; list behaviors by name.
+
+### Complexity hotspots
+A list of functions or files that are unusually large, deeply nested, or hard
+to read. For each:
+- Path and symbol
+- One-line description of the smell (length, nesting, branching, mixed
+  concerns)
+- Whether the spec or plan justifies the complexity (some complexity is
+  intrinsic to the problem; some is accidental)
+
+If there are no hotspots, output the line: NO HOTSPOTS.
+
+### Regression risk
+A list of modules, files, or call sites this change could affect. For each:
+- Path
+- Why this change reaches it (shared types, shared data store, shared
+  endpoints, shared utilities)
+- Whether the test suite covers the interaction
+
+If a reached site is uncovered, name it explicitly. Do not soften the finding.
+
+### Open questions surfaced during build
+A list of every place the implementation had to make a choice the spec or
+plan did not pin down. For each:
+- The choice that was made
+- The alternatives that were rejected, briefly
+- Whether the choice warrants an ADR
+
+These are the seeds of future ADRs. Do not omit small ones; small unrecorded
+choices accumulate into drift.
+
+### Ship verdict
+One of three values, with a one-line reason. The verdict line is the last
+line of the output and stands alone.
+
+- READY: every spec behavior is covered, hotspots are intrinsic or
+  acceptable, regression risk is contained, open questions are recorded.
+- FIX-FIRST: at least one named issue must be fixed before shipping. Name the
+  blocker.
+- RETURN-TO-STAGE-1: the build revealed a design problem. The spec or
+  manifest must be updated before any further code work. Name the gap.
+
+Constraints:
+- Do not propose code edits. If a fix is obvious, the verdict is FIX-FIRST
+  and the user decides how to fix it.
+- Do not redesign. If the report exposes a structural problem, the verdict is
+  RETURN-TO-STAGE-1, not a list of suggestions.
+- Do not soften findings. If coverage is missing, say so. If a hotspot is
+  unjustified, say so. The user reads this output to make a ship decision.
+
+End the output with the verdict line on its own. Format exactly:
+Verdict: READY
+Verdict: FIX-FIRST -- <one-line reason>
+Verdict: RETURN-TO-STAGE-1 -- <one-line reason>
+
+STOP after the verdict line.
+```
+
+<Note>
+**TBD — Volta to verify:** the exact prompt wording, the report fields, and the verdict format. The draft above is a structured starting point.
+</Note>
+
+<Note>
+**TBD — Volta to verify:** whether `/speckit.analyze` runs once at the end of building or iteratively as the module is built. The draft above assumes once-at-the-end. If it's iterative, the "When to use" and "What to do next" sections need adjustment.
+</Note>
+
+<Note>
+**TBD — Volta to verify:** whether `/speckit.analyze` can block shipping (a `FIX-FIRST` verdict is mandatory to address) or whether it is advisory. The draft above treats the verdict as binding, which is the safer default.
+</Note>
 
 ## What you get back
 
-TBD
+A structured report with five sections — coverage, complexity hotspots, regression risk, open questions, ship verdict — plus a single verdict line that ends the output.
+
+If you've never seen the verdict be `RETURN-TO-STAGE-1`, you may be running `/speckit.analyze` too late, or the spec and plan are catching everything earlier in the pipeline. Both are good outcomes — but check, don't assume.
+
+<Tip>
+The five report sections are context. The verdict is the action. If you find yourself reading the sections to decide what to do, you are doing the verdict's job — read the verdict first.
+</Tip>
 
 ## What to do next
 
-TBD
+<Steps>
+  <Step title="Read the verdict first">
+    The five report sections are context; the verdict is the action. If the verdict is missing or malformed, re-run the prompt — that is the only mandatory output.
+  </Step>
+  <Step title="If READY">
+    Ship. Update the [manifest](/backend/workflow/module-manifest) with any [ADRs](/glossary) the open-questions section surfaced. Move on.
+  </Step>
+  <Step title="If FIX-FIRST">
+    Address the named issues. Re-run `/speckit.analyze` to confirm the verdict moves to `READY`. Do not ship on a `FIX-FIRST` verdict.
+  </Step>
+  <Step title="If RETURN-TO-STAGE-1">
+    Stop. The implementation revealed a design problem the spec did not catch. Switch to Obsidian with Opus, update the manifest, add an [ADR](/glossary) explaining the gap, then restart Stage 2 from [/speckit.specify](/backend/prompts/speckit-specify).
+  </Step>
+</Steps>
+
+<Warning>
+A `RETURN-TO-STAGE-1` verdict is not a failure. It is the [mode lock](/backend/workflow/speckit) catching a design problem before it ships. Patching the code to dodge the verdict puts a known-bad design into production — see [Mental Model](/backend/workflow/mental-model) on the Stage-1-return-trip rule.
+</Warning>
+
+<CardGroup cols={2}>
+  <Card title="Module Manifest" href="/backend/workflow/module-manifest">
+    Where ADRs from analysis findings live.
+  </Card>
+  <Card title="Mental Model" href="/backend/workflow/mental-model">
+    The Stage-1-return-trip rule that governs `RETURN-TO-STAGE-1` verdicts.
+  </Card>
+</CardGroup>

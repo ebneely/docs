@@ -1,26 +1,120 @@
 ---
 title: "/speckit.clarify"
-description: "(WIP) Resolve ambiguities or open questions in a draft spec"
+description: "Resolve ambiguities or open questions in a draft spec"
 ---
 
 # /speckit.clarify
 
-<Note>
-This page is a placeholder. Real content coming soon.
-</Note>
+This is the second [SpecKit](/backend/workflow/speckit) prompt. You run it when [/speckit.specify](/backend/prompts/speckit-specify) produced a spec with `[NEEDS DECISION]` markers, open-question callouts, or ambiguous fields.
+
+It does not redesign the spec. It surfaces every place a reader would have to guess, and you answer those questions in Stage 1 before the pipeline continues.
 
 ## When to use
 
-TBD
+- The spec from [/speckit.specify](/backend/prompts/speckit-specify) contains `[NEEDS DECISION]` markers, open-question callouts, or ambiguous fields.
+- A reader of the spec would have to guess at intent in at least one place.
+- The decision tree at [/backend/decisions/after-specify](/backend/decisions/after-specify) sent you here.
+
+`/speckit.clarify` never resolves a question itself — it asks them. The answers come from Stage 1 thinking, not from Sonnet.
 
 ## The prompt
 
-TBD
+```
+You are Sonnet running Stage 2 / SpecKit / clarify phase. Mode: question-finder.
+You will not redesign the spec, propose alternatives, or fill in gaps yourself.
+
+Below this prompt I will paste the draft spec produced by /speckit.specify.
+
+Your job: walk the spec end-to-end and surface every place a reader would have
+to guess at intent. For each one, produce one numbered item in the output list.
+
+Each item must contain exactly these fields, in this order:
+
+1. Location
+   The section heading the ambiguity sits inside, plus a short verbatim quote
+   (one line at most) that pins the spot.
+
+2. Ambiguity
+   One sentence. Describe what is unclear. Do not propose a fix.
+
+3. Candidate resolutions
+   Two or three concrete options the spec could land on. Each option is one
+   short clause. Do not pick one. Do not rank them. Do not invent a "best"
+   answer.
+
+4. Why this matters
+   One sentence. Name the downstream decision that is blocked until this is
+   resolved (data model shape, API contract, wave fit, security baseline, test
+   strategy).
+
+5. Routing
+   One of two values:
+   - SPEC-LOCAL: the answer is a small decision the user can record in the
+     spec without changing the manifest.
+   - STAGE-1-RETURN: the answer requires updating the module manifest, adding
+     an ADR, or revisiting RIPER. Stop on this question; do not try to resolve
+     it inline.
+
+Constraints:
+- Do not invent answers. If a resolution requires Stage 1 thinking, mark the
+  item STAGE-1-RETURN and move on.
+- Do not propose new candidate resolutions outside the two or three you list.
+- Do not rewrite, restructure, or summarize the spec. The spec stays as-is.
+- If the spec has zero ambiguities, output exactly the line: NO QUESTIONS.
+
+Output format: a numbered list. Each item is a self-contained block the user
+can answer in Obsidian.
+
+STOP after the list. Do not regenerate the spec. The user will answer in
+Stage 1 and re-run /speckit.specify if any answer changes the manifest.
+```
+
+<Note>
+**TBD — Volta to verify:** the exact prompt wording. Volta's real prompt may include the project's manifest folder reference, custom marker syntax (the spec might use a different flag than `[NEEDS DECISION]`), or a different output format (e.g. a marked-up spec with inline annotations rather than a separate question list).
+</Note>
+
+<Note>
+**TBD — Volta to verify:** what `/speckit.clarify` actually produces — a question list, a marked-up spec, or both. The draft above assumes a separate question list because it composes well with the [after-specify](/backend/decisions/after-specify) decision tree, but Volta's real output may differ.
+</Note>
 
 ## What you get back
 
-TBD
+A numbered list of clarification items. Each item is self-contained — location, ambiguity, candidate resolutions, why it matters, and a routing tag (`SPEC-LOCAL` or `STAGE-1-RETURN`).
+
+Each item is answerable in Obsidian. The answers update the [module manifest](/backend/workflow/module-manifest) (if they change scope) or the spec directly (if they're spec-local).
+
+If `/speckit.clarify` returns zero items — the prompt outputs `NO QUESTIONS` — the spec is clean. Skip directly to [/speckit.plan](/backend/prompts/speckit-plan).
+
+<Tip>
+The routing tag is the cheapest signal in the output. Skim it first. If every item is `SPEC-LOCAL`, you can answer them in a sitting. If any item is `STAGE-1-RETURN`, switch tools before you start answering.
+</Tip>
 
 ## What to do next
 
-TBD
+<Steps>
+  <Step title="Triage the questions">
+    Read all questions. Group them by the routing tag: `SPEC-LOCAL` (small decisions, answer in place) versus `STAGE-1-RETURN` (need [manifest](/backend/workflow/module-manifest) update or an [ADR](/glossary)).
+  </Step>
+  <Step title="Answer Stage 1 return-trips first">
+    For `STAGE-1-RETURN` items, switch to Obsidian with Opus. Update the manifest, add an ADR explaining each decision, then come back. Do not try to answer these inside Stage 2.
+  </Step>
+  <Step title="Answer spec-local items">
+    For `SPEC-LOCAL` answers, edit the spec in place — or re-run [/speckit.specify](/backend/prompts/speckit-specify) with the answers in context if multiple changes need to settle together.
+  </Step>
+  <Step title="Continue the pipeline">
+    When the spec has zero open questions, run [/speckit.plan](/backend/prompts/speckit-plan).
+  </Step>
+</Steps>
+
+<Warning>
+If a question's answer changes the module's scope, data model, API surface, or wave fit, that is a Stage 1 return-trip even if the routing tag said otherwise. The tag is a hint, not a verdict — see [Mental Model](/backend/workflow/mental-model) on the Stage-1-return-trip rule.
+</Warning>
+
+<CardGroup cols={2}>
+  <Card title="/speckit.plan" href="/backend/prompts/speckit-plan">
+    Next prompt once the spec is clean.
+  </Card>
+  <Card title="After /speckit.specify" href="/backend/decisions/after-specify">
+    The decision tree that sent you here.
+  </Card>
+</CardGroup>

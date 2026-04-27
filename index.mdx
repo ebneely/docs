@@ -57,10 +57,10 @@ This playbook assumes you know which wave the project is in. Waves bound expecta
 
 | Wave | Stage | MAU range | What changes |
 |------|-------|-----------|--------------|
-| **W1** | MVP | 0 – 10K | Single Railway instance, basic security checklist |
-| W2 | Early Growth | 10K – 100K | Read replicas, formal threat model |
-| W3 | Scale | 100K – 1M | Partitioning, pen testing, ASVS L2 |
-| W4 | Hyper-scale | 1M+ | Multi-region, continuous threat modeling |
+| **W1** | MVP | 0 – 10K | Single instance, basic security checklist |
+| W2 | Early Growth | 10K – 100K | Redundant instances, formal review per module |
+| W3 | Scale | 100K – 1M | Multi-region + queues, threat model + pen-test |
+| W4 | Hyper-scale | 1M+ | Global + failover, continuous review |
 
 See [**Waves**](/backend/workflow/waves) in the Backend section for the full table and bump procedure.
 

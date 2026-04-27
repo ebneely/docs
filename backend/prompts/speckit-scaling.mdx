@@ -1,26 +1,148 @@
 ---
 title: "/speckit-scaling"
-description: "(WIP) Review module against the current wave's scaling expectations"
+description: "Review the module against the current wave's scaling expectations"
 ---
 
 # /speckit-scaling
 
-<Note>
-This page is a placeholder. Real content coming soon.
-</Note>
+This is the fourth SpecKit prompt in the pipeline — after [/speckit.plan](/backend/prompts/speckit-plan) and before [/speckit-security](/backend/prompts/speckit-security). It checks the implementation plan against the project's current [wave](/backend/workflow/waves) and surfaces any gaps. Depth scales with wave: lighter at W1, deeper at W3+.
+
+The command itself stays the same across waves. What it produces changes. The mode lock from [SpecKit](/backend/workflow/speckit) still applies — this is a reviewer, not a redesigner.
 
 ## When to use
 
-TBD
+- Immediately after [/speckit.plan](/backend/prompts/speckit-plan), before any code is written.
+- Before shipping, when the project's wave has changed since the module was last reviewed.
+- During a [wave bump](/backend/workflows/wave-bump), when every module gets a fresh scaling review at the new wave's depth.
 
 ## The prompt
 
-TBD
+```
+You are Sonnet running Stage 2 / SpecKit / scaling phase. Mode: scaling
+reviewer. You will not redesign and you will not write code. Your job is to
+surface gaps between the implementation plan and the project's current wave.
+
+Below this prompt I will paste:
+- The module spec (from /speckit.specify, possibly updated by /speckit.clarify).
+- The implementation plan (from /speckit.plan).
+- The project's current wave: one of W1, W2, W3, W4.
+
+Walk the plan against the wave. Produce a wave-appropriate review covering
+each of the five fields below. For each field, state the assumption you read
+out of the plan, then state whether it fits the current wave.
+
+Required fields:
+
+### Throughput assumptions
+What request volume does the plan assume? Does that match what the current
+wave expects this module to handle? Flag any silent single-instance, single-
+worker, or single-region assumptions.
+
+### Storage assumptions
+What data volume, growth rate, and retention does the plan imply? Does the
+storage shape (single DB, sharded, partitioned, archived) hold at the current
+wave? Flag silent assumptions about row counts, index sizes, or backup needs.
+
+### Concurrency assumptions
+What does the plan assume about connections, locks, queue depth, and
+concurrent writers? Are those assumptions safe at the current wave? Flag any
+implicit "one writer at a time" or "low contention" assumptions that the
+wave's traffic would break.
+
+### Failure assumptions
+How does the plan handle partial failures, dependency outages, and graceful
+degradation? Does the tolerance match the current wave's expectations for
+downtime and recovery?
+
+### Cost shape
+Rough sense of monthly infrastructure cost implied by the plan. Does it sit
+inside the current wave's expected cost band, or does the plan imply spend
+that belongs to a different tier?
+
+Wave-aware depth:
+- W1: a checklist scan. Flag only what is obviously missing or obviously
+  overbuilt for an MVP. Do not invent gaps.
+- W2: a structured review. Each field gets an explicit assumption-and-fit
+  pair. Surface implicit assumptions that real traffic would expose.
+- W3: a deeper review. Question every cross-region, queueing, and caching
+  assumption. Cite specific lines of the plan when flagging a gap.
+- W4: a capacity-planning pass. Include explicit headroom numbers, regional
+  failure scenarios, and cost shape projections at expected growth.
+
+Categorize every gap you surface as one of:
+- Block: must be addressed before shipping.
+- ADR-required: acceptable, but the rationale must be documented as an ADR
+  in the module manifest before continuing.
+- Note: worth knowing, no action required.
+
+Output format: the five field sections above, each with the
+assumption-and-fit pair, followed by a final list grouping every gap you
+raised under Block / ADR-required / Note.
+
+STOP after the gap list. Do not modify the plan. Do not propose fixes beyond
+naming the gap and its category. The user walks the after-scaling decision
+tree to decide what to do.
+```
+
+<Note>
+**TBD — Volta to verify:** the exact prompt wording, the review fields, and the gap-categorization labels. The draft uses "Block / ADR-required / Note" but Volta's real labels may differ.
+</Note>
+
+<Note>
+**TBD — Volta to verify:** the exact wave-specific depth differences. The draft says W1 = checklist, W2 = structured review, W3 = deeper review with line-level citations, W4 = capacity-planning pass with headroom numbers. The [Waves](/backend/workflow/waves) page has the same TBD on per-wave rigor and is the source of truth.
+</Note>
+
+<Note>
+**TBD — Volta to verify:** the exact output format /speckit-scaling produces — a checklist, a diff against the plan, an annotated risks list, or some other shape. The draft above assumes a categorized gap list because it composes well with the [after-scaling decision tree](/backend/decisions/after-scaling).
+</Note>
+
+<Note>
+**TBD — Volta to verify:** the exact wave-by-wave capacity envelopes (throughput, storage, request volume bands, cost bands). The [Waves](/backend/workflow/waves) page has the same TBDs and is the source of truth once filled.
+</Note>
+
+<Note>
+**TBD — Volta to verify:** the exact "infrastructure gap" definition per wave — what counts as a gap at W1 versus W3. The draft asks Sonnet to read assumptions out of the plan, but the threshold for calling something a gap is Volta's calibration.
+</Note>
 
 ## What you get back
 
-TBD
+A wave-appropriate review covering throughput, storage, concurrency, failure, and cost shape, followed by a categorized gap list using Block / ADR-required / Note. Cross-walk the gap list against the [after-scaling decision tree](/backend/decisions/after-scaling) to decide what to do.
+
+Output volume scales with wave. At W1, you may get a few items or none. At W3+, expect a longer review covering each system the module touches.
+
+<Tip>
+A clean review at W3+ is unusual. If the gap list is empty at W3 or W4, re-check the wave declaration. The plan may have been written against a lower wave's assumptions, or the review didn't go deep enough.
+</Tip>
 
 ## What to do next
 
-TBD
+<Steps>
+  <Step title="Walk the after-scaling decision tree">
+    [/backend/decisions/after-scaling](/backend/decisions/after-scaling) tells you what to do with each gap category.
+  </Step>
+  <Step title="Block items">
+    Address before shipping. May require returning to [/speckit.plan](/backend/prompts/speckit-plan) or, if the gap is structural, returning to Stage 1 to update the manifest.
+  </Step>
+  <Step title="ADR-required items">
+    Document the rationale in the [module manifest](/backend/workflow/module-manifest) before continuing. The ADR records what was accepted and why.
+  </Step>
+  <Step title="Note items">
+    Capture for awareness. No action required, but keep them in the manifest so a future review can see what was previously surfaced.
+  </Step>
+  <Step title="When the gap list is clean">
+    Run [/speckit-security](/backend/prompts/speckit-security) — the wave-appropriate security review.
+  </Step>
+</Steps>
+
+<Warning>
+The [mode lock](/backend/workflow/speckit) still applies. If a gap implies the module's design is wrong for the wave (not just its plan), stop and return to Stage 1 to reassess the manifest. Do not paper over a wave mismatch inside SpecKit.
+</Warning>
+
+<CardGroup cols={2}>
+  <Card title="/speckit-security" href="/backend/prompts/speckit-security">
+    Next prompt: security review at the appropriate wave.
+  </Card>
+  <Card title="After /speckit-scaling" href="/backend/decisions/after-scaling">
+    Decision tree for handling scaling gaps.
+  </Card>
+</CardGroup>

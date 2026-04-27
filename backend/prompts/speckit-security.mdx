@@ -1,26 +1,166 @@
 ---
 title: "/speckit-security"
-description: "(WIP) Run a wave-appropriate security review against the module"
+description: "Run a wave-appropriate security review against the module"
 ---
 
 # /speckit-security
 
-<Note>
-This page is a placeholder. Real content coming soon.
-</Note>
+This is the fifth SpecKit prompt in the pipeline. It runs a security review whose depth scales with the project's [wave](/backend/workflow/waves). At W1 it's a baseline checklist; at W3+ it's a full threat model. The command itself is the same; what it produces changes.
+
+For the workflow context — when to re-run, what artifact each wave produces, and the patch-vs-redesign rule — see [Security review](/backend/workflows/security-review).
 
 ## When to use
 
-TBD
+- After [/speckit-scaling](/backend/prompts/speckit-scaling), before [/speckit.analyze](/backend/prompts/speckit-analyze) and shipping.
+- Whenever a module touches authentication, payments, or PII (re-run on every change, not just major ones).
+- During a [wave bump](/backend/workflows/wave-bump) — every module gets re-reviewed at the new wave's depth.
+- After a relevant CVE or external incident, even on stable modules.
 
 ## The prompt
 
-TBD
+```
+You are Sonnet running Stage 2 / SpecKit / security phase. Mode: security
+reviewer. You will not modify code and you will not change the design. Your
+job is to surface findings.
+
+Below this prompt I will paste:
+- The module spec (from /speckit.specify, possibly updated by /speckit.clarify).
+- The implementation plan (from /speckit.plan).
+- The project's current wave: one of W1, W2, W3, W4.
+- For W4 only: the compliance framework that applies to this project.
+
+Run a security review whose depth matches the wave. Use the wave-specific
+checklist below. Higher waves include everything from lower waves.
+
+Wave-specific depth:
+
+### W1 - baseline checklist
+- Auth in place on every endpoint that needs it.
+- Input validation on every request boundary.
+- Secrets are not in code or in committed config.
+- Basic rate limiting on public-facing routes.
+- Error responses do not leak internal structure.
+
+### W2 - structured threat enumeration
+Everything in W1, plus:
+- Per-module threat enumeration with documented controls.
+- Audit logging on sensitive operations.
+- Session management review (token lifetime, rotation, revocation).
+- Secrets rotation cadence confirmed.
+- Dependency scan findings reviewed and triaged.
+
+### W3 - full threat model
+Everything in W2, plus:
+- Full threat model using a STRIDE-style decomposition or equivalent.
+- Trust boundary diagram for the module described in prose.
+- Application security verification at a defined level.
+- Cross-region and queueing assumptions reviewed for security implications.
+- Periodic pen-test scope identified for critical paths.
+
+### W4 - continuous review
+Everything in W3, plus:
+- Continuous review hooks identified for ongoing module operation.
+- Pen-test cadence verification against the stated cadence.
+- Compliance framework alignment checked against the framework the user
+  declared above this prompt.
+- Incident response runbook entries confirmed for module-specific failure
+  modes.
+
+Categorize every finding as one of:
+- Critical: blocks ship.
+- High: fix before ship, or accept with an explicit ADR in the module
+  manifest.
+- Medium: fix before the next major release. Tracked, not ignored.
+- Note: awareness only. No action required.
+
+For each finding, output:
+- Location: which part of the spec or plan the finding refers to.
+- Threat: the specific threat or weakness.
+- Recommended action: what would close the finding.
+- Severity rationale: why this finding sits at this severity.
+
+Output format: one heading per wave-specific section you walked, listing the
+items you checked. Then a final findings list grouped under Critical / High /
+Medium / Note.
+
+STOP after the findings list. Do not patch code. Do not propose redesigns
+beyond naming the threat and recommended action. The user decides scope of
+remediation.
+```
+
+<Note>
+**TBD — Volta to verify:** the exact prompt wording. The wave-specific instructions above are scaffolded from [Security review](/backend/workflows/security-review) and [Waves](/backend/workflow/waves); Volta's real prompt may include specific framework references, project-specific compliance hooks, or a different finding-severity rubric.
+</Note>
+
+<Note>
+**TBD — Volta to verify:** the exact framework used at W3. The draft says STRIDE-style; the [security-review workflow](/backend/workflows/security-review) flags this as TBD (could be STRIDE, PASTA, LINDDUN, or another).
+</Note>
+
+<Note>
+**TBD — Volta to verify:** the exact application security verification level Volta targets at W3 (L2? L3?). The draft says "application security verification at a defined level" without committing.
+</Note>
+
+<Note>
+**TBD — Volta to verify:** the W4 pen-test cadence (quarterly, monthly, continuous?) and which compliance frameworks apply (SOC 2, ISO 27001, others). The draft asks the user to state the framework rather than naming one.
+</Note>
+
+<Note>
+**TBD — Volta to verify:** the finding severity rubric. The draft uses Critical / High / Medium / Note; Volta's real rubric may use different bands or different ship-blocking thresholds.
+</Note>
+
+<Note>
+**TBD — Volta to verify:** the exact W1 baseline checklist contents. The five items above are the generic shape; the real checklist may be longer or differently grouped. The [Security review](/backend/workflows/security-review) page has the same TBD.
+</Note>
 
 ## What you get back
 
-TBD
+A categorized findings list whose depth scales with wave. Each finding includes location, threat, recommended action, and severity rationale.
+
+The artifact format also varies by wave. See [Security review](/backend/workflows/security-review) for the per-wave shape:
+
+| Wave | Output                                                                  |
+| ---- | ----------------------------------------------------------------------- |
+| W1   | A signed-off checklist. One page or less.                               |
+| W2   | A structured review document with threats and controls.                 |
+| W3   | A full threat model with STRIDE-or-equivalent decomposition.            |
+| W4   | Continuous review notes plus the pen-test report on cadence.            |
+
+<Tip>
+An empty findings list at W3+ is a signal — usually it means the wave is mis-set or the review didn't go deep enough. Re-check the wave declaration before celebrating.
+</Tip>
 
 ## What to do next
 
-TBD
+<Steps>
+  <Step title="Read findings by severity">
+    Critical first. The verdict on each Critical finding determines whether you can ship.
+  </Step>
+  <Step title="Critical findings">
+    Block. Either patch in place (if the fix doesn't change the trust boundary) or return to Stage 1 (if the threat model needs revising). See [Security review](/backend/workflows/security-review) for the redesign-vs-patch rule.
+  </Step>
+  <Step title="High findings">
+    Address before ship, or accept with an explicit [ADR](/glossary) in the [module manifest](/backend/workflow/module-manifest).
+  </Step>
+  <Step title="Medium findings">
+    Schedule for the next release. Tracked, not ignored. Capture in the manifest so the next review sees what was deferred.
+  </Step>
+  <Step title="Note findings">
+    Captured for awareness. No action required.
+  </Step>
+  <Step title="When the findings list is clean">
+    Run [/speckit.analyze](/backend/prompts/speckit-analyze) — the post-build analysis prompt.
+  </Step>
+</Steps>
+
+<Warning>
+The [mode lock](/backend/workflow/speckit) still applies. If a finding implies the module's trust boundary or threat model is wrong (not just its implementation), stop and return to Stage 1 to update the manifest with an ADR before patching.
+</Warning>
+
+<CardGroup cols={2}>
+  <Card title="/speckit.analyze" href="/backend/prompts/speckit-analyze">
+    Final SpecKit prompt: post-build analysis.
+  </Card>
+  <Card title="Security review" href="/backend/workflows/security-review">
+    Workflow context: artifacts per wave, when to re-run.
+  </Card>
+</CardGroup>

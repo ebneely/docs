@@ -1,26 +1,107 @@
 ---
 title: "/riper-map"
-description: "(WIP) Map module decisions, trade-offs, and constraints"
+description: "Generate alternatives and trade-offs during the Innovate phase"
 ---
 
 # /riper-map
 
-<Note>
-This page is a placeholder. Real content coming soon.
-</Note>
+This is the Innovate-phase prompt. It generates the alternatives table that feeds Plan. You diverge here so the Plan phase has real options to choose between, not a default. For the full protocol context, see [RIPER](/backend/workflow/riper).
 
 ## When to use
 
-TBD
+- After [/riper-goals](/backend/prompts/riper-goals) has produced clear goals and falsifiable success criteria.
+- During RIPER's Innovate phase, before committing to a single approach.
+- When a single approach feels obvious — that's exactly when you most need divergent options to confirm or refute it.
 
 ## The prompt
 
-TBD
+```
+You are Opus running Stage 1 RIPER, Innovate phase. Mode: thinking only.
+No code in this turn.
+
+Below this prompt I will paste:
+1. The goals and success criteria block from /riper-goals.
+2. Any constraint context (existing modules, prior ADRs, wave assessment,
+   non-functional limits).
+
+Your job: produce at least three viable approaches that could plausibly meet
+the goals. Three is the floor. Five is the ceiling. Each approach must be
+meaningfully different from the others.
+
+For each approach, output exactly these fields:
+
+### Name
+A short label, two to four words. Use it as the heading.
+
+### Description
+One paragraph in plain language. Describe the approach, not the code. A
+reader who has never seen this codebase should understand what the approach
+is and what shape it takes.
+
+### Trade-offs
+Three to five bullet points. Each bullet is balanced: it must mention both a
+strength and a cost. Bad: "fast". Good: "fastest read path of the three,
+at the cost of a heavier write path and a second consistency boundary".
+
+### Wave fit
+One sentence. Does this approach match the project's current wave, or does
+it assume a higher or lower one? If it assumes a higher wave, say so plainly.
+
+Hard constraints:
+- Do not recommend an approach. Do not say "I would choose X". Do not rank
+  them. Do not pre-sort them by your preference. Innovate is divergent
+  thinking; ranking happens in the Plan phase.
+- The approaches must be meaningfully different. Different architectural
+  shape. Different trade-off profile. Not three flavors of the same idea
+  with renamed variables.
+- If the constraints genuinely admit only one viable shape, report that as
+  "Only one viable approach" with the reason and the constraints that
+  forced it. That is a real finding, not a failure.
+
+STOP after the alternatives. Do not pick. Wait for confirmation before
+moving to Plan.
+```
+
+<Note>
+**TBD — Volta to verify:** the prompt wording, the approach structure (whether each gets a "name", "trade-offs", "wave fit", or different fields), and the minimum number of alternatives required. The draft above asks for at least three; Volta's real prompt may set a different floor.
+</Note>
 
 ## What you get back
 
-TBD
+Three or more named approaches. Each has a description, a balanced trade-off list, and a wave-fit sentence.
+
+A few things to remember about this output:
+
+- **It is input to Plan.** It is not a decision yet. The Plan phase is where you pick.
+- **The approaches should feel meaningfully different.** Different architectural shape, different trade-off profile. If they read like three names for the same idea, the Innovate phase did its job poorly.
+- **"Only one viable approach" is a valid output.** It means the constraints genuinely narrow the design space. Document the constraints that forced it, then move to Plan.
+
+<Tip>
+If the approaches all read like minor variations on the same idea, re-run /riper-map and ask for genuinely divergent shapes. Force divergence by naming a constraint to invert ("now generate one approach that uses a queue instead of synchronous calls").
+</Tip>
 
 ## What to do next
 
-TBD
+<Steps>
+  <Step title="Read all approaches with their trade-offs">
+    Read top to bottom. Resist the pull to pick a favorite on the first pass. The trade-offs are what you are evaluating, not the names.
+  </Step>
+  <Step title="Verify the approaches are meaningfully different">
+    Different architectural shape, not three names for the same approach. If two approaches collapse into the same trade-off profile when you squint, they are not real alternatives.
+  </Step>
+  <Step title="Re-run if approaches feel too similar or one dominates trivially">
+    Ask for stronger divergence or a deeper trade-off table. A trivial winner often means the trade-offs were under-specified, not that the choice is obvious.
+  </Step>
+  <Step title="Move to RIPER's Plan phase">
+    When you have real alternatives, move to Plan to pick one. The pick lands in the [module manifest](/backend/workflow/module-manifest) along with the rationale, often as an [ADR](/glossary).
+  </Step>
+</Steps>
+
+<CardGroup cols={2}>
+  <Card title="RIPER" href="/backend/workflow/riper">
+    The full RIPER protocol where /riper-map sits in the Innovate phase.
+  </Card>
+  <Card title="Module Manifest" href="/backend/workflow/module-manifest">
+    Where the chosen approach and rationale land.
+  </Card>
+</CardGroup>
