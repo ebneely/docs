@@ -1,7 +1,8 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Mintlify Starter Kit",
+  "name": "Volta's Workflow Playbook",
+  "description": "Volta's project-agnostic operating manual for running Claude (Opus + Sonnet). Two mindsets: backend (RIPER + SpecKit + waves) and frontend (design-first + components + polish). Every project applies this manual; the manual itself stays project-free.",
   "colors": {
     "primary": "#16A34A",
     "light": "#07C983",
@@ -11,85 +12,102 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "Guides",
+        "tab": "Backend",
         "groups": [
           {
-            "group": "Getting started",
+            "group": "Start here",
+            "pages": ["index"]
+          },
+          {
+            "group": "The workflow",
             "pages": [
-              "index",
-              "quickstart",
-              "development"
+              "backend/workflow/mental-model",
+              "backend/workflow/riper",
+              "backend/workflow/speckit",
+              "backend/workflow/waves",
+              "backend/workflow/module-manifest"
             ]
           },
           {
-            "group": "Customization",
+            "group": "Prompts",
             "pages": [
-              "essentials/settings",
-              "essentials/navigation"
+              "backend/prompts/index",
+              "backend/prompts/riper-fit",
+              "backend/prompts/riper-goals",
+              "backend/prompts/riper-map",
+              "backend/prompts/speckit-specify",
+              "backend/prompts/speckit-clarify",
+              "backend/prompts/speckit-plan",
+              "backend/prompts/speckit-scaling",
+              "backend/prompts/speckit-security",
+              "backend/prompts/speckit-analyze"
             ]
           },
           {
-            "group": "Writing content",
+            "group": "Workflows",
             "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/components",
-              "essentials/reusable-snippets"
+              "backend/workflows/index",
+              "backend/workflows/new-module",
+              "backend/workflows/fit-check",
+              "backend/workflows/wave-bump",
+              "backend/workflows/security-review"
             ]
           },
           {
-            "group": "Agent ready",
+            "group": "Decision trees",
             "pages": [
-              "agent-ready/prompt",
-              "agent-ready/visibility",
-              "agent-ready/contextual",
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
+              "backend/decisions/index",
+              "backend/decisions/after-specify",
+              "backend/decisions/after-plan",
+              "backend/decisions/after-scaling"
             ]
+          },
+          {
+            "group": "Reference",
+            "pages": ["glossary"]
           }
         ]
       },
       {
-        "tab": "API reference",
+        "tab": "Frontend",
         "groups": [
           {
-            "group": "API documentation",
+            "group": "Start here",
+            "pages": ["index"]
+          },
+          {
+            "group": "The mindset",
             "pages": [
-              "api-reference/introduction"
+              "frontend/mindset/design-first",
+              "frontend/mindset/components",
+              "frontend/mindset/polish",
+              "frontend/mindset/accessibility"
             ]
           },
           {
-            "group": "Endpoint examples",
+            "group": "Prompts",
+            "pages": ["frontend/prompts/index"]
+          },
+          {
+            "group": "Workflows",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "frontend/workflows/index",
+              "frontend/workflows/new-component",
+              "frontend/workflows/design-review",
+              "frontend/workflows/accessibility-audit"
             ]
+          },
+          {
+            "group": "Decision trees",
+            "pages": ["frontend/decisions/index"]
+          },
+          {
+            "group": "Reference",
+            "pages": ["glossary"]
           }
         ]
       }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
-  },
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+    ]
   },
   "navbar": {
     "links": [
@@ -115,12 +133,5 @@
      "cursor",
      "vscode"
    ]
-  },
-  "footer": {
-    "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
-    }
   }
 }

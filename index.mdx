@@ -1,133 +1,87 @@
 ---
-title: "Introduction"
-description: "Welcome to the new home for your documentation"
-icon: 'star'
+title: "Welcome"
+description: "How Volta builds software with Claude — the workflow, the prompts, and the decisions"
 ---
 
-## Setting up
+# Welcome
 
-Get your documentation site up and running in minutes.
+This is the operating manual for how I run Claude (Opus + Sonnet) when building software. It documents the workflow, the prompts, and the decisions — not any specific project.
 
-<Card
-  title="Start here"
-  icon="rocket"
-  href="/quickstart"
-  horizontal
->
-  Follow our three step quickstart guide.
-</Card>
+Every project I build uses this playbook. The playbook itself stays project-agnostic — it's the manual; projects apply the manual.
 
-## Make it yours
+## What this playbook covers
 
-Design a docs site that looks great and empowers your users.
+Two distinct mindsets, two tabs:
 
-<Columns cols={2}>
-  <Card
-    title="Edit locally"
-    icon="pen-to-square"
-    href="/development"
-  >
-    Edit your docs locally and preview them in real time.
+<CardGroup cols={2}>
+  <Card title="Backend" icon="server">
+    APIs, data models, scaling, security, module shipping.
+
+    Tools: RIPER planning → SpecKit pipeline → wave system → module manifest.
+
+    Optimizes for: correctness, scaling, security.
   </Card>
-  <Card
-    title="Customize your site"
-    icon="palette"
-    href="/essentials/settings"
-  >
-    Customize the design and colors of your site to match your brand.
-  </Card>
-    <Card
-    title="Set up navigation"
-    icon="map"
-    href="/essentials/navigation"
-  >
-    Organize your docs to help users find what they need and succeed with your product.
-  </Card>
-  <Card
-    title="API documentation"
-    icon="terminal"
-    href="/api-reference/introduction"
-  >
-    Auto-generate API documentation from OpenAPI specifications.
-  </Card>
-</Columns>
+  <Card title="Frontend" icon="palette">
+    Design tokens, components, accessibility, polish, browser behavior.
 
-## Create beautiful pages
+    Tools: design-first iteration → component libraries → polish review → accessibility audit.
 
-Everything you need to create world-class documentation.
+    Optimizes for: usability, polish, accessibility.
+  </Card>
+</CardGroup>
 
-<Columns cols={2}>
-  <Card
-    title="Write with MDX"
-    icon="pen-fancy"
-    href="/essentials/markdown"
-  >
-    Use MDX to style your docs pages.
-  </Card>
-  <Card
-    title="Code samples"
-    icon="code"
-    href="/essentials/code"
-  >
-    Add sample code to demonstrate how to use your product.
-  </Card>
-  <Card
-    title="Images"
-    icon="image"
-    href="/essentials/images"
-  >
-    Display images and other media.
-  </Card>
-  <Card
-    title="Reusable snippets"
-    icon="recycle"
-    href="/essentials/reusable-snippets"
-  >
-    Write once and reuse across your docs.
-  </Card>
-</Columns>
+<Note>
+  These are different shapes of work. Backend optimizes for correctness; frontend optimizes for the human experience. The playbook treats them as separate disciplines because they are.
+</Note>
 
-## Make your content agent ready
+## How to use this playbook
 
-Make your docs work for humans and AI agents alike.
+<Steps>
+  <Step title="Pick your mindset">
+    **Backend** or **Frontend** at the top. Your current task lives in one or the other.
+  </Step>
+  <Step title="Read the foundational pages">
+    Backend → "The workflow" group. Frontend → "The mindset" group.
+  </Step>
+  <Step title="Find the prompt you need">
+    Backend prompts and frontend prompts each have their own section. One page per command.
+  </Step>
+  <Step title="Follow the workflow">
+    Workflows describe end-to-end flows (e.g. shipping a new backend module). Decision trees tell you what to do after Claude responds.
+  </Step>
+</Steps>
 
-<Columns cols={2}>
-  <Card
-    title="Prompt component"
-    icon="robot"
-    href="/agent-ready/prompt"
-  >
-    Embed shareable AI prompts readers can copy or open in Cursor.
-  </Card>
-  <Card
-    title="Visibility"
-    icon="eye"
-    href="/agent-ready/visibility"
-  >
-    Show different content to humans and agents reading your docs.
-  </Card>
-  <Card
-    title="Contextual menu"
-    icon="bolt"
-    href="/agent-ready/contextual"
-  >
-    Give readers one-click access to Claude, ChatGPT, Cursor, and more.
-  </Card>
-  <Card
-    title="AI coding tools"
-    icon="wand-magic-sparkles"
-    href="/ai-tools/claude-code"
-  >
-    Set up Claude Code, Cursor, or Windsurf with Mintlify's skill.
-  </Card>
-</Columns>
+## The wave system
 
-## Need inspiration?
+This playbook assumes you know which wave the project is in. Waves bound expectations: at W1 (MVP) the security review is a checklist; at W3 (Scale) it's a full STRIDE threat model. Same agent, different depth, driven by current wave.
 
-<Card
-  title="See complete examples"
-  icon="stars"
-  href="https://mintlify.com/customers"
->
-  Browse our showcase of exceptional documentation sites.
-</Card>
+| Wave | Stage | MAU range | What changes |
+|------|-------|-----------|--------------|
+| **W1** | MVP | 0 – 10K | Single Railway instance, basic security checklist |
+| W2 | Early Growth | 10K – 100K | Read replicas, formal threat model |
+| W3 | Scale | 100K – 1M | Partitioning, pen testing, ASVS L2 |
+| W4 | Hyper-scale | 1M+ | Multi-region, continuous threat modeling |
+
+See [**Waves**](/backend/workflow/waves) in the Backend section for the full table and bump procedure.
+
+## What this is NOT
+
+<Warning>
+  - Not project-specific. MiniRue, future projects — none of them appear here. Project decisions live in their own vaults and codebases.
+  - Not the actual workflow files (those live in the Obsidian vault for whichever project you're working on)
+  - Not exhaustive — it's a reference for the common cases
+</Warning>
+
+## Source of truth
+
+This guidebook is the **canonical reference** for how I run Claude Code. Everything else aligns to it.
+
+<Note>
+  - **Obsidian vault mirrors this guidebook exactly** — whatever the playbook describes, the workflow files in Obsidian match. Not approximately. Exactly.
+  - **Claude Code follows this guidebook pixel-perfect** on every project — same prompts, same structure, same decision trees, same conventions, every time.
+  - **Reusable across every future project** — this isn't MiniRue-specific. It's the organized Claude Code operating manual that drops into any new repo.
+</Note>
+
+## Status
+
+This playbook is being built incrementally. Pages marked with `(WIP)` or empty pages are placeholders. Pages without that marker are stable and ready to read.
