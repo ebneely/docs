@@ -1,10 +1,115 @@
 ---
 title: "SpecKit"
-description: "(WIP) The Stage 2 build framework used with Sonnet"
+description: "The Stage 2 build framework"
 ---
 
 # SpecKit
 
+SpecKit is the Stage 2 build framework. You run it inside the project's codebase with Sonnet, and it consumes the [module manifest](/backend/workflow/module-manifest) produced in Stage 1. Stage 1 thinks; Stage 2 builds. SpecKit is the toolset for that build half. See [Mental Model](/backend/workflow/mental-model) for the full split.
+
+You drive SpecKit through a small set of `/speckit.*` slash commands. Each command takes the manifest plus the working state of the codebase and produces one specific artifact — a spec, a clarification pass, a plan, a scaling check, a security review, or a final analysis.
+
 <Note>
-This page is a placeholder. Real content coming soon.
+**TBD — Volta to verify:** the precise list of slash commands, the exact arguments each accepts, and any commands not covered here are Volta's specific configuration.
 </Note>
+
+## The pipeline
+
+The commands run in roughly this order. You can re-run earlier ones if a later command surfaces a gap.
+
+<Note>
+**TBD — Volta to verify:** whether the order below is strict or whether some commands are optional, parallel, or iterative in practice.
+</Note>
+
+<Steps>
+  <Step title="/speckit.specify">
+    Turns the manifest into a build-ready spec inside the codebase. This is the first command you run. It pins down what the module actually is in the language of the code, not the language of the planning doc. See [/speckit.specify](/backend/prompts/speckit-specify).
+
+    <Note>
+    **TBD — Volta to verify:** the exact output format `/speckit.specify` produces — single file, structured sections, where it lands in the repo.
+    </Note>
+  </Step>
+
+  <Step title="/speckit.clarify">
+    Runs after `/speckit.specify` and surfaces ambiguities the spec didn't resolve. Gives you a list of questions the build cannot answer on its own. You either answer them in place or — if any answer requires redesign — stop and return to Stage 1. See [/speckit.clarify](/backend/prompts/speckit-clarify).
+
+    <Note>
+    **TBD — Volta to verify:** whether `/speckit.clarify` produces a question list, a marked-up spec, or both.
+    </Note>
+  </Step>
+
+  <Step title="/speckit.plan">
+    Converts the clarified spec into an ordered implementation plan. Steps, dependencies, and the files each step touches. This is the last command before code starts changing in earnest. See [/speckit.plan](/backend/prompts/speckit-plan).
+
+    <Note>
+    **TBD — Volta to verify:** the exact shape of the plan output and whether it includes test scaffolding alongside implementation steps.
+    </Note>
+  </Step>
+
+  <Step title="/speckit-scaling">
+    A custom command that checks the plan against the project's current [wave](/backend/workflow/waves). Surfaces scaling assumptions that don't hold at the current tier and flags ones that will break at the next. See [/speckit-scaling](/backend/prompts/speckit-scaling).
+
+    <Note>
+    **TBD — Volta to verify:** what `/speckit-scaling` actually produces — a checklist, a diff against the plan, or annotated risks.
+    </Note>
+  </Step>
+
+  <Step title="/speckit-security">
+    A custom command that runs a security pass calibrated to the current wave. Light at W1, heavier at W3+. See [/speckit-security](/backend/prompts/speckit-security).
+
+    <Note>
+    **TBD — Volta to verify:** the exact output shape of `/speckit-security` and how it varies by wave.
+    </Note>
+  </Step>
+
+  <Step title="/speckit.analyze">
+    The final pass. Reads the implemented module against the spec, the plan, and any scaling or security findings, and reports gaps. Run this before you consider the module shipped. See [/speckit.analyze](/backend/prompts/speckit-analyze).
+
+    <Note>
+    **TBD — Volta to verify:** what `/speckit.analyze` reports — a pass/fail, a gap list, a structured review — and whether it ever blocks shipping.
+    </Note>
+  </Step>
+</Steps>
+
+## Command syntax
+
+Two syntaxes appear in the pipeline. Preserve them when you call commands.
+
+- `/speckit.X` — native commands shipped with SpecKit. Dot separator.
+- `/speckit-X` — custom commands added on top. Hyphen separator.
+
+The dot vs hyphen is meaningful — they resolve through different paths.
+
+## The mode lock
+
+<Warning>
+Stage 2 does not redesign. If any `/speckit.*` command surfaces a question that cannot be answered without rethinking the module's shape, you stop SpecKit and return to Stage 1. You update the manifest, then come back. You do not patch around design questions inside SpecKit.
+</Warning>
+
+The mode lock is what keeps the two stages from bleeding into each other. SpecKit's job is to execute. If execution exposes that the plan was wrong, that's a planning problem, not a build problem. Send it back.
+
+## Wave-aware behavior
+
+The SpecKit pipeline runs at every [wave](/backend/workflow/waves), but its depth scales with the project's current tier. Same commands, different rigor.
+
+- At W1, `/speckit-security` runs a short checklist. At W3, it runs a full threat model.
+- At W1, `/speckit-scaling` flags obvious single-instance assumptions. At W3, it questions every cross-region and queueing assumption.
+- The native commands (`/speckit.specify`, `/speckit.clarify`, `/speckit.plan`, `/speckit.analyze`) tighten as the wave climbs — more clarification questions surface, plans split into smaller steps, analyze runs harder.
+
+<Note>
+**TBD — Volta to verify:** the exact wave-by-wave depth differences for each command. The page-level [Waves](/backend/workflow/waves) doc has the same TBDs and is the source of truth once filled.
+</Note>
+
+## Related
+
+<CardGroup cols={3}>
+  <Card title="Mental Model" href="/backend/workflow/mental-model">
+    The two-stage split that puts SpecKit in Stage 2.
+  </Card>
+  <Card title="Module Manifest" href="/backend/workflow/module-manifest">
+    The artifact SpecKit consumes from Stage 1.
+  </Card>
+  <Card title="Waves" href="/backend/workflow/waves">
+    The maturity tier that scales SpecKit's depth.
+  </Card>
+</CardGroup>

@@ -1,10 +1,66 @@
 ---
 title: "After /speckit-scaling"
-description: "(WIP) Decision tree for handling the output of a /speckit-scaling review"
+description: "Decision tree for handling the output of a /speckit-scaling review"
 ---
 
 # After /speckit-scaling
 
+You just ran [`/speckit-scaling`](/backend/prompts/speckit-scaling). The output is a wave-aware review of the plan. Walk this tree before you move on to security.
+
+<Steps>
+  <Step title="Does the scaling review identify infrastructure gaps for the current wave?">
+    Read the findings against the project's current [wave](/backend/workflow/waves). A gap means the plan assumes infrastructure the project doesn't yet have at this tier.
+
+    - **Yes:** decide whether to fix the gap now (inside this module's plan) or accept it and record an [ADR](/glossary) explaining the trade-off.
+    - **No:** continue to step 2.
+
+    <Note>
+    **TBD — Volta to verify:** the threshold for "fix now" vs "ADR and move on" is Volta's call. Likely depends on whether the gap blocks the module's success criteria or only its non-functional headroom.
+    </Note>
+  </Step>
+
+  <Step title="Does it suggest the module is sized for a higher wave than the project?">
+    Look for findings that say "this is overbuilt for the current wave" — entities, queues, redundancy, or capacity assumptions that belong to a later tier.
+
+    - **Yes:** descope the module to fit the current wave. Don't bump the project's wave to match an over-engineered module.
+    - **No:** continue to step 3.
+
+    <Note>
+    **TBD — Volta to verify:** the right call when a module is sized higher than the project. The default above ("descope, don't bump") is the safe answer. Volta's specific rule may differ — for instance, whether some modules are allowed to run ahead of the project's wave deliberately.
+    </Note>
+  </Step>
+
+  <Step title="Are capacity numbers within wave-appropriate ranges?">
+    Cross-check projected throughput, storage, and request volume against the wave's expected envelope. If the plan implies numbers the wave can't sustain, the plan is misaligned.
+
+    - **No:** tighten the implementation plan to bring the numbers in range, or accept the cost explicitly and record it.
+    - **Yes:** continue to step 4.
+
+    <Note>
+    **TBD — Volta to verify:** the exact wave-by-wave capacity envelopes (throughput, storage, request volume bands) are Volta's specific numbers and live on the [Waves](/backend/workflow/waves) page once filled.
+    </Note>
+  </Step>
+
+  <Step title="All clean? Run /speckit-security">
+    No infrastructure gaps, module sized to wave, capacity within range. Run [`/speckit-security`](/backend/prompts/speckit-security) to run the security pass calibrated to the current wave.
+  </Step>
+</Steps>
+
+<Warning>
+The [mode lock](/backend/workflow/speckit) still applies. If a scaling finding implies the module's design (not just its plan) is wrong for the wave, stop and return to Stage 1 to reassess the manifest. Don't paper over a wave mismatch inside SpecKit.
+</Warning>
+
 <Note>
-This page is a placeholder. Real content coming soon.
+**TBD — Volta to verify:** the entire scaling-review interpretation is Volta's specific protocol. The decision shape above — gaps, wave fit, capacity envelopes — is this playbook's generic frame. The real rubric may include checks not listed here, or weight these checks differently.
 </Note>
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="/speckit-scaling" href="/backend/prompts/speckit-scaling">
+    The command whose output this tree handles.
+  </Card>
+  <Card title="Waves" href="/backend/workflow/waves">
+    The W1–W4 model the scaling review reads against.
+  </Card>
+</CardGroup>

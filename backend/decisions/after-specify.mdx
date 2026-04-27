@@ -1,10 +1,62 @@
 ---
 title: "After /speckit.specify"
-description: "(WIP) Decision tree for handling the output of a /speckit.specify call"
+description: "Decision tree for handling the output of a /speckit.specify call"
 ---
 
 # After /speckit.specify
 
-<Note>
-This page is a placeholder. Real content coming soon.
-</Note>
+You just ran [`/speckit.specify`](/backend/prompts/speckit-specify). The output is in front of you. Walk this tree.
+
+<Steps>
+  <Step title="Did the spec leave [NEEDS DECISION] markers?">
+    Scan the spec for unresolved markers — places where the model paused and flagged a question rather than guessing.
+
+    - **Yes:** run [`/speckit.clarify`](/backend/prompts/speckit-clarify) to surface the questions, answer them in place, then return to step 2.
+    - **No:** continue to step 2.
+
+    <Note>
+    **TBD — Volta to verify:** whether `[NEEDS DECISION]` is the actual marker syntax `/speckit.specify` produces, or whether the markers use a different convention.
+    </Note>
+  </Step>
+
+  <Step title="Does the spec name external dependencies you don't control?">
+    Look for any third-party service, upstream API, or shared resource the module relies on but cannot guarantee.
+
+    - **Yes:** log a concern in the project's `_concerns/INBOX.md` with `category=integration`, then continue to step 3.
+    - **No:** continue to step 3.
+
+    <Note>
+    **TBD — Volta to verify:** whether `_concerns/INBOX.md` is a real path in Volta's vault or aspirational. If real, the exact path, category convention, and entry format are Volta's call.
+    </Note>
+  </Step>
+
+  <Step title="Does the spec exceed the scope of the original RIPER planning?">
+    Compare the spec's surface against the [module manifest](/backend/workflow/module-manifest) that started Stage 2. If the spec adds entities, endpoints, or behaviors the manifest didn't sanction, the design has drifted.
+
+    - **Yes:** stop. Return to Stage 1, refine the manifest under [RIPER](/backend/workflow/riper), then re-run `/speckit.specify` from the updated manifest. Don't patch the drift inside Stage 2.
+    - **No:** continue to step 4.
+
+    <Note>
+    **TBD — Volta to verify:** whether step 3 is a real check Volta runs after `/speckit.specify`, or whether scope drift is caught at a different point in the pipeline.
+    </Note>
+  </Step>
+
+  <Step title="All clean? Run /speckit.plan">
+    Markers resolved, dependencies logged, scope aligned with the manifest. Run [`/speckit.plan`](/backend/prompts/speckit-plan) to convert the spec into an ordered implementation plan.
+  </Step>
+</Steps>
+
+<Warning>
+At any step, if a finding requires redesign — not just clarification — stop SpecKit and return to Stage 1. The [mode lock](/backend/workflow/speckit) keeps Stage 2 from absorbing thinking work that belongs in the manifest.
+</Warning>
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="/speckit.specify" href="/backend/prompts/speckit-specify">
+    The command whose output this tree handles.
+  </Card>
+  <Card title="After /speckit.plan" href="/backend/decisions/after-plan">
+    The next decision tree once the plan returns.
+  </Card>
+</CardGroup>

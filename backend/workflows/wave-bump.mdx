@@ -1,10 +1,138 @@
 ---
 title: "Wave bump"
-description: "(WIP) Procedure for moving a project from W(n) to W(n+1)"
+description: "Procedure for moving a project from W(n) to W(n+1)"
 ---
 
 # Wave bump
 
+A wave bump is a deliberate decision, not a drift. You're acknowledging that the project has reached a scale where the lower wave's assumptions no longer hold and the next wave's depth is now appropriate.
+
+You bump waves once. You don't half-bump. The whole project — its planning depth, its security posture, its infrastructure assumptions — moves together.
+
+If the wave system is unfamiliar, start at [Waves](/backend/workflow/waves).
+
+## Triggers
+
+Consider a wave bump when one or more of the following becomes true:
+
+- **User scale crosses the next wave's threshold.** Traffic has grown past what the lower wave assumes about load and redundancy.
+- **Specific incidents reveal current rigor isn't enough.** An outage, a near-miss, or a security finding makes clear that the current depth is no longer safe.
+- **Compliance or audit requirements arrive.** A contract, a regulation, or a customer requirement pulls you up a tier regardless of user scale.
+- **Revenue or business stakes change.** Outages or breaches now cost meaningful money or trust.
+
 <Note>
-This page is a placeholder. Real content coming soon.
+**TBD — Volta to verify:** the exact thresholds Volta uses for each trigger — user counts, revenue numbers, incident severity bands. The Waves page has the same TBDs and is the source of truth once filled.
 </Note>
+
+The triggers are signals, not commands. You decide when one or more of them adds up to a real bump.
+
+## The procedure
+
+<Steps>
+  <Step title="Audit the current state">
+    Walk every part of the project against the next wave's expectations. What's already at that level? What isn't?
+
+    Cover at minimum: infrastructure (redundancy, regions, observability), security posture, planning depth across recent modules, monitoring and alerting, incident process. The audit produces a gap list.
+  </Step>
+
+  <Step title="Reassess existing modules">
+    Most modules need a security re-run at the new wave's depth. See [Security review](/backend/workflows/security-review).
+
+    For each module: re-open the manifest, confirm the wave assessment, run `/speckit-security` again at the new depth. Modules touching auth, payments, or PII get the deepest reassessment.
+
+    <Note>
+    **TBD — Volta to verify:** the exact reassessment depth required — whether every module gets a full re-run or only modules above a certain risk threshold.
+    </Note>
+  </Step>
+
+  <Step title="Update the wave declaration">
+    Edit the wave field in the project's planning docs. Every module manifest references the project's current wave; the bump is now the source of truth.
+
+    Add an ADR documenting the bump: the trigger, the date, the audit findings, the modules requiring reassessment.
+  </Step>
+
+  <Step title="Communicate the bump">
+    Tell the team. Tell stakeholders if relevant. The bump changes how new modules will be planned, how reviews will be sized, and what infrastructure decisions are now in scope.
+  </Step>
+</Steps>
+
+<Note>
+**TBD — Volta to verify:** whether individual modules within a single project can stay at the lower wave even after a project-level bump, or whether the bump applies uniformly to every module. The Waves page has the same TBD.
+</Note>
+
+## What changes per wave
+
+Each transition pulls specific things from "nice to have" to "mandatory." The deltas below are the generic shape.
+
+<AccordionGroup>
+  <Accordion title="W1 → W2">
+    **What gets stricter:**
+    - Security review moves from a checklist to a structured review per module.
+    - Dependency scanning becomes routine.
+    - Secrets rotation becomes a real process.
+
+    **What becomes mandatory:**
+    - Redundant instances and managed data with backups.
+    - Basic observability (metrics, logs, alerts on the critical paths).
+    - Formal review per module instead of informal pass.
+
+    <Note>
+    **TBD — Volta to verify:** the exact W1 → W2 deltas — what specific tooling, depth, or cadence Volta requires.
+    </Note>
+  </Accordion>
+
+  <Accordion title="W2 → W3">
+    **What gets stricter:**
+    - Security moves to full threat modeling per module.
+    - Scaling assumptions get questioned at every cross-region and queueing boundary.
+    - Planning depth grows — manifests become multi-document.
+
+    **What becomes mandatory:**
+    - Multi-region infrastructure with autoscaling.
+    - Queues for async work.
+    - Full observability stack (metrics, traces, logs, alerting).
+    - Formal incident process.
+    - Periodic pen-test cadence.
+
+    <Note>
+    **TBD — Volta to verify:** the exact W2 → W3 deltas — STRIDE depth, ASVS level, pen-test frequency, and observability tooling specifics.
+    </Note>
+  </Accordion>
+
+  <Accordion title="W3 → W4">
+    **What gets stricter:**
+    - Security moves to continuous review.
+    - Capacity planning becomes a recurring exercise.
+    - Compliance posture is now a first-class concern.
+
+    **What becomes mandatory:**
+    - Global distribution with regional failover.
+    - Multi-tenancy isolation if applicable.
+    - Dedicated security function or equivalent ownership.
+    - Strategic infrastructure budget cycle.
+
+    <Note>
+    **TBD — Volta to verify:** the exact W3 → W4 deltas — what "continuous review" looks like in practice, which compliance frameworks apply, and how dedicated the security function needs to be.
+    </Note>
+  </Accordion>
+</AccordionGroup>
+
+## Anti-patterns
+
+- **Drifting up.** Adding W3 depth to a W1 project a piece at a time, without an explicit bump. You end up with mismatched rigor — a threat-modeled module sitting next to a checklist-only module. Bump explicitly or don't bump at all.
+- **Bumping pre-emptively.** Declaring W3 before traffic justifies it. The depth is appropriate for current reality, not for the reality you hope arrives.
+- **Bumping without re-running existing modules.** New modules get the new depth, old modules stay shallow. The weakest module sets the project's actual posture.
+
+## Related
+
+<CardGroup cols={3}>
+  <Card title="Waves" href="/backend/workflow/waves">
+    The W1 — W4 ladder.
+  </Card>
+  <Card title="Security review" href="/backend/workflows/security-review">
+    The audit step that runs across every module during a bump.
+  </Card>
+  <Card title="Module Manifest" href="/backend/workflow/module-manifest">
+    The artifact each module's wave assessment lives in.
+  </Card>
+</CardGroup>

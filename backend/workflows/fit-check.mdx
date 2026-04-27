@@ -1,10 +1,84 @@
 ---
 title: "Fit-check"
-description: "(WIP) Quick validation of feature scope before deeper planning"
+description: "Quick validation of feature scope before deeper planning"
 ---
 
 # Fit-check
 
+A fit-check is a 5-minute gate. You run it before any deeper planning, before opening Obsidian, before writing a single RIPER note. It catches scope drift before it becomes a 5-day problem.
+
+The output is one of three things: a green light to proceed to RIPER, a redirect (this belongs to a different module), or a kill (this is not worth doing now).
+
+## When to use
+
+Run a fit-check at the start of any new feature or module. Run it especially when:
+
+- The request is ambiguous or arrived as a one-line message.
+- The work could plausibly be one module or three.
+- You feel pressure to "just start coding."
+- You're not sure which existing module the work touches.
+
+If you feel the urge to skip the fit-check because "the request is obvious," run it anyway. Five minutes is cheap. The fit-check itself is fast when the request really is obvious — and when it is not, it just saved you.
+
+## The fit-check questions
+
+Walk through these in order. Stop early if any answer kills the work.
+
+- **What is the smallest version of this that delivers value?** Strip every nice-to-have. The remaining core is what you're sizing.
+- **What's the wave we're sized for?** Confirm against the project's current [wave](/backend/workflow/waves). A W1 module gets a W1 manifest, not a W3 one.
+- **Does this fit the current module's scope, or does it need a new module?** If the work crosses two modules, decide which one owns it before going further.
+- **Are we sure we want this? Why?** Name the user need or business reason in one sentence. If you cannot, the work is not ready for planning.
+
 <Note>
-This page is a placeholder. Real content coming soon.
+**TBD — Volta to verify:** the exact question list Volta uses in practice. The four above are the generic shape; Volta may add or remove specific questions.
 </Note>
+
+## The output
+
+A fit-check ends in one of three states.
+
+<AccordionGroup>
+  <Accordion title="Green light">
+    The work is real, sized for one module, and worth doing now. Proceed to [RIPER planning](/backend/workflow/riper) in Obsidian.
+  </Accordion>
+
+  <Accordion title="Redirect">
+    The work belongs to a different module than you thought, or it splits into two. Re-route before any planning starts. The redirect is a successful fit-check — the discovery happened in 5 minutes instead of 5 days.
+  </Accordion>
+
+  <Accordion title="Kill">
+    The work is not worth doing now (no clear user need, blocked by a missing module, lower priority than what's open). Park it. Note the reason so future-you doesn't re-litigate.
+  </Accordion>
+</AccordionGroup>
+
+<Note>
+**TBD — Volta to verify:** the exact output format. Whether a fit-check produces a one-liner, a structured doc, an Obsidian note, or just an in-conversation answer is Volta's convention.
+</Note>
+
+## How you run it
+
+<Note>
+**TBD — Volta to verify:** whether fit-check uses a dedicated slash command (e.g. `/fit-check`) or is a freeform discussion against Opus inside Obsidian. The page assumes freeform until confirmed.
+</Note>
+
+The intent is the same either way: walk the questions, get to one of the three outputs, decide. If the answer is "green light," you start RIPER. If the answer is anything else, you stop here.
+
+## Anti-pattern
+
+Skipping fit-check because the request feels obvious. Two failure modes follow:
+
+- **You start RIPER on the wrong scope.** You spend a half-day designing a module that should have been three modules, or one piece of an existing module.
+- **You start coding directly.** You skip Stage 1 entirely and produce a half-baked module that drifts from any existing design.
+
+Both cost more than the fit-check would have. The fit-check is the cheapest possible insurance.
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="New module" href="/backend/workflows/new-module">
+    The full end-to-end flow that fit-check is the first gate of.
+  </Card>
+  <Card title="RIPER" href="/backend/workflow/riper">
+    The Stage 1 protocol that runs after a green-light fit-check.
+  </Card>
+</CardGroup>

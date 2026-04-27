@@ -1,10 +1,122 @@
 ---
 title: "Waves"
-description: "(WIP) The W1 → W4 maturity model that scales expectations with project size"
+description: "The W1 → W4 maturity model"
 ---
 
 # Waves
 
 <Note>
-This page is a placeholder. Real content coming soon.
+Waves are not a roadmap. They are a current-state assessment. The wave you are in tells you what depth of work is appropriate **now** — not what you are heading toward.
 </Note>
+
+A project sits at exactly one wave at a time. That wave sets how deep your planning goes, how much rigor SpecKit applies, and how much you spend on infrastructure and security. You move waves when the project's reality changes, not on a schedule.
+
+## The four waves
+
+<Tabs>
+  <Tab title="W1 — MVP">
+    The starting tier. You are proving the product is worth building.
+
+    - **User scale:** 0 – 10K MAU
+    - **Infrastructure:** single instance, single region, minimal redundancy
+    - **Security:** baseline checklist — auth, secrets, input validation, basic logging
+    - **Cost shape:** small monthly footprint, optimized for getting to first users
+
+    <Note>
+    **TBD — Volta to verify:** the 0 – 10K MAU range, the exact monthly cost band, and what "baseline checklist" includes line-by-line.
+    </Note>
+  </Tab>
+
+  <Tab title="W2 — Early Growth">
+    The product has product-market fit signal and is taking real traffic.
+
+    - **User scale:** 10K – 100K MAU
+    - **Infrastructure:** redundant instances, managed data store with backups, basic observability
+    - **Security:** formal review per module, dependency scanning, secrets rotation
+    - **Cost shape:** noticeably higher than W1, still well below revenue
+
+    <Note>
+    **TBD — Volta to verify:** the 10K – 100K MAU range, the cost band, and the exact contents of "formal review per module."
+    </Note>
+  </Tab>
+
+  <Tab title="W3 — Scale">
+    The product is meaningfully large. Outages cost real money and real trust.
+
+    - **User scale:** 100K – 1M MAU
+    - **Infrastructure:** multi-region, queues for async work, autoscaling, full observability stack
+    - **Security:** full threat modeling, periodic pen-test, formal incident process
+    - **Cost shape:** infrastructure is a real line item; you optimize it actively
+
+    <Note>
+    **TBD — Volta to verify:** the 100K – 1M MAU range, the cost band, and what "full threat modeling" means in Volta's STRIDE-or-equivalent practice.
+    </Note>
+  </Tab>
+
+  <Tab title="W4 — Hyper-scale">
+    Global, mission-critical, regulated, or all three.
+
+    - **User scale:** 1M+ MAU
+    - **Infrastructure:** global distribution, regional failover, capacity planning, multi-tenancy isolation
+    - **Security:** continuous review, dedicated security function, compliance posture
+    - **Cost shape:** infrastructure is a strategic concern with its own budget cycle
+
+    <Note>
+    **TBD — Volta to verify:** the 1M+ threshold, the cost band, and what "continuous review" and "compliance posture" cover at this tier.
+    </Note>
+  </Tab>
+</Tabs>
+
+## How to know which wave you are in
+
+The honest heuristic is two numbers: monthly active users and monthly revenue.
+
+- If both are small, you are at W1.
+- If users are real and revenue covers infrastructure with room left over, you are at W2.
+- If outages cost meaningful revenue and you have stakeholders other than yourself, you are at W3.
+- If a region going down would make the news, you are at W4.
+
+Don't over-engineer the assessment. Pick the wave whose description matches your reality, not the one you wish you were in.
+
+## Wave bumps
+
+You move from W(n) to W(n+1) when the lower wave's assumptions stop holding — usually traffic, sometimes revenue, sometimes a contractual or compliance trigger. The bump is its own piece of work: you re-survey infrastructure, re-run security at the new depth, and update every module's manifest to reflect the new tier.
+
+See [Wave bump workflow](/backend/workflows/wave-bump) for the end-to-end recipe.
+
+<Note>
+**TBD — Volta to verify:** whether individual modules within a single project can sit at different waves than the project itself, or whether wave is strictly project-level.
+</Note>
+
+## Wave-aware tooling
+
+The workflow does not change between waves. The depth does. Same [Stage 1 / Stage 2](/backend/workflow/mental-model) split, same [SpecKit](/backend/workflow/speckit) pipeline — but the planning is shorter at W1 and longer at W3, the security pass is a checklist at W1 and a threat model at W3, and the scaling check at W1 ignores assumptions you must question at W3.
+
+The protocol is constant. The rigor scales.
+
+## The wave ladder
+
+| Wave | Stage          | MAU range    | Infra                         | Security depth      | Notes                                    |
+| ---- | -------------- | ------------ | ----------------------------- | ------------------- | ---------------------------------------- |
+| W1   | MVP            | 0 – 10K      | Single instance               | Checklist           | Optimize for getting to first users      |
+| W2   | Early Growth   | 10K – 100K   | Redundant + managed data      | Formal per module   | Real traffic, real backups               |
+| W3   | Scale          | 100K – 1M    | Multi-region + queues         | Threat model + pen  | Outages cost money                       |
+| W4   | Hyper-scale    | 1M+          | Global + failover             | Continuous review   | Compliance and capacity planning kick in |
+
+<Note>
+**TBD — Volta to verify:** every MAU range and security-depth label in the table above. The values are starting points and may not match Volta's calibration.
+</Note>
+
+## Related
+
+<CardGroup cols={3}>
+  <Card title="Mental Model" href="/backend/workflow/mental-model">
+    The two-stage split whose depth scales with wave.
+  </Card>
+  <Card title="SpecKit" href="/backend/workflow/speckit">
+    The Stage 2 pipeline that reads the current wave.
+  </Card>
+  <Card title="Wave bump" href="/backend/workflows/wave-bump">
+    The workflow for moving from W(n) to W(n+1).
+  </Card>
+</CardGroup>

@@ -1,10 +1,138 @@
 ---
 title: "Mental Model"
-description: "(WIP) The two-stage workflow: Stage 1 thinks, Stage 2 builds"
+description: "The two-stage workflow: Stage 1 thinks, Stage 2 builds"
 ---
 
 # Mental Model
 
+This is the philosophical core of the backend playbook. Everything else — RIPER, SpecKit, waves, the manifest, every prompt page — exists to serve this one idea:
+
 <Note>
-This page is a placeholder. Real content coming soon.
+**Stage 1 thinks. Stage 2 builds. The two never overlap.**
 </Note>
+
+If you internalize only one thing from this playbook, internalize this. The rest is mechanics.
+
+## Why split at all?
+
+Software work has two distinct modes. They have opposite optima.
+
+<CardGroup cols={2}>
+  <Card title="Thinking work" icon="brain">
+    Scoping, designing, choosing trade-offs, deciding what NOT to build.
+
+    Slow by nature. Wrong answers here cost weeks later.
+
+    Best done with the highest-quality model you have, taking its time.
+  </Card>
+  <Card title="Building work" icon="code">
+    Writing code, generating tests, executing the plan, shipping.
+
+    Fast by nature. Wrong answers here cost minutes — easy to revert.
+
+    Best done with a fast, focused model that follows instructions exactly.
+  </Card>
+</CardGroup>
+
+A model good at one is wasted on the other. So we use **two different models** for the two stages, and put a hard wall between them.
+
+## Stage 1 — Plan
+
+**Tools:** Obsidian + Opus + RIPER
+
+**Mode:** thinking, scoping, designing.
+
+You're in Obsidian. You're using Opus. You're following the [RIPER protocol](/backend/workflow/riper) — a five-phase loop that forces you to research before innovating, plan before executing, execute before reviewing.
+
+You produce: a module spec, a data model sketch, an API contract, a wave assessment, a security plan. Documents, not code.
+
+You stop Stage 1 when you have a [module manifest](/backend/workflow/module-manifest) — the document that says "design is done. Building can start."
+
+<Tip>
+The temptation in Stage 1 is to start coding when an idea feels obvious. Resist it. Write the idea down, keep designing. If it's truly obvious, writing it down costs nothing. If it's not, you just saved yourself a rewrite.
+</Tip>
+
+<Warning>
+**Stage 1 never writes code.** Not even a snippet, not even a "quick draft to think it through." Code is Stage 2's job. The moment you open a code file in Stage 1, you've broken the wall.
+</Warning>
+
+## Stage 2 — Build
+
+**Tools:** [SpecKit](/backend/workflow/speckit) + Sonnet
+
+**Mode:** implementing exactly what Stage 1 specified.
+
+You switch to Sonnet. You feed it the manifest. You let SpecKit drive — its `/speckit.*` commands take a manifest and produce code, tests, documentation, security review.
+
+You produce: a working module, tested, ready to ship.
+
+You **do not redesign in Stage 2**. If you find a gap in the spec, you stop, go back to Stage 1, fix the spec, regenerate the manifest, restart Stage 2. This sounds slow. It's the opposite — it prevents the spec rot that makes long projects collapse.
+
+<Warning>
+**Sonnet will happily redesign for you mid-build.** That's the trap. The speed feels productive, but it routes around the thinking work Stage 1 was supposed to finish. Refuse the redesign in-place — take the suggestion seriously, and if it's right, walk it back to Stage 1, update the manifest, and restart Stage 2 from a clean spec.
+</Warning>
+
+## The handoff
+
+The boundary between stages is the [module manifest](/backend/workflow/module-manifest). It's not a vibe or a meeting. It's a single document.
+
+<Steps>
+  <Step title="You finish Stage 1">
+    The manifest is complete. It captures: scope, data model, API surface, wave (W1–W4), security baseline, success criteria.
+  </Step>
+  <Step title="You commit the manifest">
+    Into the project's Obsidian vault. It's now the source of truth for Stage 2.
+  </Step>
+  <Step title="Stage 2 starts">
+    Switch to Sonnet. Run `/speckit.specify` against the manifest. SpecKit takes over.
+  </Step>
+  <Step title="Stage 2 returns code">
+    Built, tested, reviewed. The manifest's done state matches the code's done state.
+  </Step>
+</Steps>
+
+If the manifest is incomplete, Stage 2 fails — Sonnet asks questions you can't answer without thinking, which means you're back in Stage 1 anyway. The manifest forces honest completion of the planning work before code starts.
+
+## Why this works
+
+Three reasons, each load-bearing:
+
+1. **Right tool for right work.** Opus is expensive and slow. Use it for the work where slowness pays off — design. Sonnet is fast and cheap. Use it for the work where speed pays off — implementation.
+
+2. **Forces clear thinking before code.** The act of producing a manifest reveals gaps that "let me just start coding" hides. The cost of those gaps is much lower in a doc than in a partially-built module.
+
+3. **Catches drift early.** When Stage 2 asks a question Stage 1 didn't answer, you have a signal: the design wasn't done. You go back, finish it, and avoid building on a bad foundation.
+
+## What this is NOT
+
+<Warning>
+- **Not waterfall.** You're not designing the whole project upfront. You're designing one module at a time, each its own Stage 1 → Stage 2 cycle.
+- **Not a permission gate.** Stage 1 isn't asking permission. It's clarifying intent so Stage 2 can move fast.
+- **Not bureaucracy.** A small module's manifest can be one page. The point is the discipline, not the volume.
+- **Not optional.** Skipping Stage 1 because "this is simple" is the most reliable way to ship slop. If it's truly simple, Stage 1 is fast.
+</Warning>
+
+This looks like more process than people expect. It's faster long-term because rework is the most expensive thing you can do, and Stage 1 is what prevents it.
+
+## The wave overlay
+
+The two-stage workflow is constant. What changes is the **depth** of each stage based on the project's wave (W1 MVP → W4 Hyper-scale). At W1, Stage 1 is light: a half-page manifest. At W3, Stage 1 is heavy: full threat model, formal data flow analysis, capacity planning.
+
+Same workflow, different intensity. See [Waves](/backend/workflow/waves) for the full ladder.
+
+## Where to go next
+
+<CardGroup cols={2}>
+  <Card title="RIPER" icon="compass" href="/backend/workflow/riper">
+    The Stage 1 protocol — Research, Innovate, Plan, Execute, Review.
+  </Card>
+  <Card title="SpecKit" icon="hammer" href="/backend/workflow/speckit">
+    The Stage 2 framework — what each `/speckit.*` command does.
+  </Card>
+  <Card title="Waves" icon="signal" href="/backend/workflow/waves">
+    The W1–W4 maturity ladder that scales the workflow's depth.
+  </Card>
+  <Card title="Module Manifest" icon="file-contract" href="/backend/workflow/module-manifest">
+    The contract that ends Stage 1 and starts Stage 2.
+  </Card>
+</CardGroup>

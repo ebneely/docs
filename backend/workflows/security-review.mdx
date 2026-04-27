@@ -1,10 +1,146 @@
 ---
 title: "Security review"
-description: "(WIP) Wave-appropriate security audit of a backend module"
+description: "Wave-appropriate security audit of a backend module"
 ---
 
 # Security review
 
+Security review is part of every module's path to shipping. It is not a separate workflow; it is a step inside [New module](/backend/workflows/new-module) and a step inside [Wave bump](/backend/workflows/wave-bump). The depth scales with the project's [wave](/backend/workflow/waves).
+
+The driver is [/speckit-security](/backend/prompts/speckit-security). The command itself stays the same across waves; what it produces changes.
+
+## What /speckit-security does at each wave
+
+<Tabs>
+  <Tab title="W1 — MVP">
+    A short checklist run. Covers the basics that every module needs regardless of scale.
+
+    **Typical checks:**
+    - Auth in place on every endpoint that needs it.
+    - Input validation on every request boundary.
+    - Secrets are not in code or in committed config.
+    - Basic rate limiting on public endpoints.
+
+    <Note>
+    **TBD — Volta to verify:** the exact contents of the W1 baseline checklist Volta uses. The four items above are the generic shape; the real checklist may be longer or differently grouped.
+    </Note>
+  </Tab>
+
+  <Tab title="W2 — Early Growth">
+    A structured review with documented threats. The module is taking real traffic and the review reflects that.
+
+    **Adds on top of W1:**
+    - Per-module threat enumeration (which threats apply to this module specifically).
+    - Documented controls for each threat.
+    - Audit logging on sensitive operations.
+    - Session management review.
+    - Secrets rotation cadence confirmed.
+    - Dependency scan findings reviewed.
+  </Tab>
+
+  <Tab title="W3 — Scale">
+    A full threat model. STRIDE-style or equivalent decomposition. Outages and breaches now cost real money and trust.
+
+    **Adds on top of W2:**
+    - Full STRIDE threat model per module.
+    - Application security verification at a defined level.
+    - Trust boundary diagram for the module.
+    - Cross-region and queueing assumptions reviewed for security implications.
+    - Periodic pen-test on critical paths.
+
+    <Note>
+    **TBD — Volta to verify:** the exact ASVS level Volta targets at W3 (L2? L3?), and whether STRIDE is the chosen framework or a different equivalent (PASTA, LINDDUN, etc.).
+    </Note>
+  </Tab>
+
+  <Tab title="W4 — Hyper-scale">
+    Continuous review. Security is not a per-module event; it's a posture.
+
+    **Adds on top of W3:**
+    - Continuous review embedded in module shipping.
+    - Pen-test on a defined cadence.
+    - Compliance framework alignment checked per module.
+    - Incident response runbooks confirmed for module-specific failure modes.
+
+    <Note>
+    **TBD — Volta to verify:** the W4 pen-test cadence (quarterly? monthly? continuous?) and which compliance frameworks Volta aligns to (SOC 2, ISO 27001, others).
+    </Note>
+  </Tab>
+</Tabs>
+
+## What you produce
+
+The artifact differs by wave.
+
+| Wave | Output                                                              |
+| ---- | ------------------------------------------------------------------- |
+| W1   | A signed-off checklist. One page or less.                           |
+| W2   | A structured review document with threats and controls.             |
+| W3   | A full threat model document with STRIDE-or-equivalent decomposition. |
+| W4   | Continuous review notes plus the pen-test report on cadence.        |
+
+In every case, the artifact lives next to the module's manifest in the project's planning docs. The diff is part of the module's history.
+
+## When to re-run
+
+Every module gets one security review before it ships. Re-run when:
+
+- **Any major change to the module.** New endpoints, new data flows, new dependencies.
+- **A module touching auth, payments, or PII gets any change.** These modules are higher-risk; re-run on every change, not only major ones.
+- **The project bumps waves.** See [Wave bump](/backend/workflows/wave-bump). The new wave's depth applies to the existing module on the next review.
+- **A relevant CVE or industry incident lands.** External signal that the existing review may be stale.
+
 <Note>
-This page is a placeholder. Real content coming soon.
+**TBD — Volta to verify:** the exact "any major change" threshold and whether modules below a certain risk band can ship without re-review on minor changes.
 </Note>
+
+## Common findings
+
+Typical issues that show up at each wave. Use these as a what-to-look-for prompt, not a complete list.
+
+<AccordionGroup>
+  <Accordion title="W1">
+    - Missing input validation on at least one endpoint.
+    - Secrets committed in config files, even temporarily.
+    - No rate limiting on public-facing routes.
+    - Auth enforced inconsistently across endpoints.
+    - Verbose error messages leaking internal structure.
+  </Accordion>
+
+  <Accordion title="W2">
+    - No audit logging on sensitive operations.
+    - Weak session management (long-lived tokens, no rotation).
+    - No key rotation process.
+    - Dependency scan flags ignored.
+    - Threats enumerated but controls not actually verified.
+  </Accordion>
+
+  <Accordion title="W3+">
+    <Note>
+    **TBD — Volta to verify:** the W3+ specific findings Volta has seen in practice. The lower-wave lists are generic enough to publish; W3+ findings depend on the specific stack and review framework Volta uses, and listing generic ones risks being either obvious or wrong.
+    </Note>
+  </Accordion>
+</AccordionGroup>
+
+## When findings require redesign
+
+Some security findings can be patched in place; others require returning to Stage 1 to update the module's threat model and security baseline.
+
+- **Patch in place:** missing validation, missing rate limit, missing log line, missing input sanitizer.
+- **Return to Stage 1:** the module's trust boundary is wrong, the data model exposes data it shouldn't, an entire threat class wasn't considered.
+
+When a finding requires redesign, follow the [Module Manifest](/backend/workflow/module-manifest) evolution flow: stop, return to Stage 1, update the manifest with an ADR, restart Stage 2 from `/speckit.specify`.
+
+## Related
+
+<CardGroup cols={3}>
+  <Card title="/speckit-security" href="/backend/prompts/speckit-security">
+    The slash command that drives this workflow.
+  </Card>
+  <Card title="Waves" href="/backend/workflow/waves">
+    The maturity ladder that scales security depth.
+  </Card>
+  <Card title="Wave bump" href="/backend/workflows/wave-bump">
+    The procedure that triggers security re-review across every module.
+  </Card>
+</CardGroup>

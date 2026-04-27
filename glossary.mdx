@@ -1,10 +1,94 @@
 ---
 title: "Glossary"
-description: "(WIP) Terms used across this playbook"
+description: "Terms used across this playbook"
 ---
 
 # Glossary
 
-<Note>
-This page is a placeholder. Real content coming soon.
-</Note>
+Every term used elsewhere in the playbook is defined here once. Pages link here instead of redefining.
+
+<AccordionGroup>
+  <Accordion title="ADR (Architecture Decision Record)">
+    A short document recording a decision made during planning — the alternatives considered, the choice, and the reason. Lives in the project's planning vault alongside the manifest. Future modules read prior ADRs to understand existing commitments before designing new ones.
+  </Accordion>
+
+  <Accordion title="Decision tree">
+    A structured flowchart used to answer "what do you do next?" after Claude returns a result. Each step is a condition, an action, and a pointer to the next step. Decision-tree pages live under [Backend → Decision trees](/backend/decisions/index) and use Mintlify `<Steps>` components, not prose.
+  </Accordion>
+
+  <Accordion title="Mindset">
+    One of the two top-level orientations in the playbook: **backend** or **frontend**. Each is a distinct discipline with different tools, optima, and decision shapes. The playbook treats them as separate tabs because the work shapes are genuinely different — backend optimizes for correctness, frontend for human experience.
+  </Accordion>
+
+  <Accordion title="Module">
+    The unit of backend planning. A self-contained chunk of work with its own scope, data model, API surface, and shipping path. Ranges from a single endpoint to a multi-table feature. Each module has its own Stage 1 → Stage 2 cycle.
+  </Accordion>
+
+  <Accordion title="Module manifest">
+    The document that ends Stage 1 and starts Stage 2. Captures the module's scope, data model sketch, API surface, wave assessment, security baseline, success criteria, and any ADRs. Stage 2 cannot start without one. See [Module Manifest](/backend/workflow/module-manifest).
+
+    <Note>
+    **TBD — Volta to verify:** the exact format (single file? structured fields? specific markdown sections in a fixed order?) is Volta's convention and may differ from the generic description here.
+    </Note>
+  </Accordion>
+
+  <Accordion title="Opus">
+    The Claude model used in **Stage 1**. Optimized for thinking work — scoping, designing, choosing trade-offs, deciding what NOT to build. Used inside Obsidian. Slow and deep on purpose.
+  </Accordion>
+
+  <Accordion title="Playbook">
+    This guidebook itself. The canonical operating manual for running Claude across every project. Project-agnostic by definition — specific projects apply the playbook independently and never appear inside it.
+  </Accordion>
+
+  <Accordion title="Prompt pattern">
+    The standard structure of a prompt page in this playbook. Every prompt page has four sections in this exact order: **When to use**, **The prompt**, **What you get back**, **What to do next**. Convention from CLAUDE.md.
+  </Accordion>
+
+  <Accordion title="RIPER (Research, Innovate, Plan, Execute, Review)">
+    The five-phase loop used during Stage 1 thinking work. The order is sequential: research before innovating, innovate before planning, plan before executing, execute before reviewing. See [RIPER](/backend/workflow/riper).
+
+    <Note>
+    **TBD — Volta to verify:** the exact phase definitions, what each phase produces, and what triggers a loop-back back to an earlier phase are Volta's specific framework. The descriptions on the RIPER page are the generic shape and may need tightening.
+    </Note>
+  </Accordion>
+
+  <Accordion title="Sonnet">
+    The Claude model used in **Stage 2**. Optimized for building work — implementing exactly what Stage 1 specified. Fast, focused, follows instructions. Lives inside the project's codebase via SpecKit.
+  </Accordion>
+
+  <Accordion title="SpecKit">
+    The Stage 2 build framework. A set of slash commands (`/speckit.specify`, `/speckit.clarify`, `/speckit.plan`, `/speckit-scaling`, `/speckit-security`, `/speckit.analyze`) that take a module manifest and produce code, tests, and reviews. See [SpecKit](/backend/workflow/speckit).
+  </Accordion>
+
+  <Accordion title="Stage 1 / Stage 2">
+    The two phases of every module's path.
+
+    - **Stage 1** thinks. Tools: Obsidian + Opus + RIPER. Produces: a module manifest. Never writes code.
+    - **Stage 2** builds. Tools: SpecKit + Sonnet. Produces: the working module. Never redesigns.
+
+    The two never overlap. See [Mental Model](/backend/workflow/mental-model) for the full philosophy and [Module Manifest](/backend/workflow/module-manifest) for the contract between them.
+  </Accordion>
+
+  <Accordion title="Wave (W1–W4)">
+    The project's current maturity tier. Determines how much rigor each stage applies and how deep the SpecKit reviews go.
+
+    - **W1** — MVP
+    - **W2** — Early Growth
+    - **W3** — Scale
+    - **W4** — Hyper-scale
+
+    See [Waves](/backend/workflow/waves).
+
+    <Note>
+    **TBD — Volta to verify:** the exact MAU thresholds, monthly cost ranges, and what each wave's rigor looks like in practice are Volta's specific numbers. The page-level Waves doc has more detail and the same TBDs.
+    </Note>
+  </Accordion>
+
+  <Accordion title="Workflow">
+    An end-to-end recipe in the playbook (e.g. New module, Fit-check, Wave bump, Security review). Workflows span both Stage 1 and Stage 2 — they describe the full path from idea to shipped module. Live under [Backend → Workflows](/backend/workflows/index).
+  </Accordion>
+</AccordionGroup>
+
+## How terms get added
+
+A new term enters the glossary when it appears on more than one page and needs a single canonical definition. Terms specific to a single page get defined on that page, not here.

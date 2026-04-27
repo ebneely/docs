@@ -1,10 +1,27 @@
 ---
 title: "Workflows"
-description: "(WIP) End-to-end flows from idea to shipped module"
+description: "End-to-end flows from idea to shipped module"
 ---
 
 # Workflows
 
-<Note>
-This page is a placeholder. Real content coming soon.
-</Note>
+A workflow is a full recipe that spans both [Stage 1 and Stage 2](/backend/workflow/mental-model). It tells you what to do from "I have an idea" to "the module is shipped." Each workflow names the steps, the order, and the prompt or doc that drives each step.
+
+The pages below cover the four flows that come up most often.
+
+<CardGroup cols={2}>
+  <Card title="New module" icon="cube" href="/backend/workflows/new-module">
+    The canonical end-to-end. Use this when you start any new module from scratch.
+  </Card>
+  <Card title="Fit-check" icon="ruler" href="/backend/workflows/fit-check">
+    A 5-minute scope-validation gate. Use this before committing to deeper planning.
+  </Card>
+  <Card title="Wave bump" icon="signal" href="/backend/workflows/wave-bump">
+    The procedure for moving the project from W(n) to W(n+1). Use this when the lower wave's assumptions stop holding.
+  </Card>
+  <Card title="Security review" icon="shield" href="/backend/workflows/security-review">
+    The wave-appropriate security audit of a module. Use this on every module before shipping.
+  </Card>
+</CardGroup>
+
+Use these as recipes, not laws. Adapt to context.

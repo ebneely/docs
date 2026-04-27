@@ -1,10 +1,125 @@
 ---
 title: "RIPER"
-description: "(WIP) The Stage 1 thinking protocol used with Opus in Obsidian"
+description: "The Stage 1 thinking protocol"
 ---
 
 # RIPER
 
+RIPER is the five-phase loop you run during Stage 1. It stands for **Research, Innovate, Plan, Execute, Review** — in that order.
+
+It lives entirely in Stage 1. You run it inside Obsidian, with Opus, before any code is written. If you don't know what Stage 1 is, start at [Mental Model](/backend/workflow/mental-model).
+
 <Note>
-This page is a placeholder. Real content coming soon.
+RIPER is a thinking protocol, not a build protocol. Every phase produces words and diagrams, never code. Code is Stage 2's job.
 </Note>
+
+## The five phases
+
+<Steps>
+  <Step title="Research">
+    Gather the context you need to make a real decision. Read existing modules in the project. Read prior ADRs. Read the current manifest if you're extending something. Pull the relevant docs for any libraries you're considering.
+
+    The goal of Research is to delete every "I'll figure that out later" before you start designing.
+
+    <Note>
+    **TBD — Volta to verify:** the exact artifact Research produces (a notes page? a structured context block? an annotated reading list?) is Volta's convention.
+    </Note>
+  </Step>
+
+  <Step title="Innovate">
+    Generate options. Diverge. Don't pick yet.
+
+    For the problem in front of you, sketch at least two viable approaches. Three is better. Each one gets named, gets a one-paragraph description, gets a list of trade-offs. The point is not to pick — the point is to make the alternatives real enough that the choice in **Plan** is informed.
+
+    <Note>
+    **TBD — Volta to verify:** the exact artifact Innovate produces (an options table? a comparison matrix? free-form sketches?) is Volta's convention.
+    </Note>
+  </Step>
+
+  <Step title="Plan">
+    Choose one path. Write it down.
+
+    From the options you generated, pick one. Justify the choice against the trade-offs. Write the plan: what gets built, what doesn't, what order, what depends on what. The plan is what someone else (or future you) reads to understand the decision.
+
+    <Note>
+    **TBD — Volta to verify:** the exact artifact Plan produces (a decision doc? an ADR? a section of the manifest?) is Volta's convention.
+    </Note>
+  </Step>
+
+  <Step title="Execute">
+    Produce the planning artifact.
+
+    This is where the [module manifest](/backend/workflow/module-manifest) gets written, or the ADR, or the threat model, or whatever Stage 1 deliverable this loop was building toward. Execute is **not** writing code — it's writing the thing that Stage 2 will consume.
+
+    <Note>
+    **TBD — Volta to verify:** the exact artifact Execute produces depends on the loop's purpose (manifest, ADR, threat model, capacity plan, etc.) — Volta's framework defines the mapping.
+    </Note>
+  </Step>
+
+  <Step title="Review">
+    Critique your own output. Find gaps. Iterate.
+
+    Read the artifact you just produced as if you were a hostile reviewer. What's missing? What did you assume? What would a stranger ask that you can't answer? If Review surfaces a real gap, you loop back — not forward.
+
+    <Note>
+    **TBD — Volta to verify:** the exact artifact Review produces (a critique log? annotations on the artifact? a checklist?) is Volta's convention.
+    </Note>
+  </Step>
+</Steps>
+
+## The order matters
+
+R-I-P-E-R is sequential, not arbitrary. Each phase depends on the one before it.
+
+- **Skip Research, and Innovate is fantasy.** You generate options that don't fit the actual constraints.
+- **Skip Innovate, and Plan is the first idea you had.** No comparison, no trade-off, just a default.
+- **Skip Plan, and Execute is improvisation.** The artifact reflects whatever the model thought sounded good.
+- **Skip Review, and you ship a draft.** Stage 2 finds the gaps for you, expensively.
+
+Skipping Research is the most common failure. It feels slow. It pays for itself five times over by the time you reach Execute.
+
+## When to loop back
+
+Sometimes Review reveals a gap that sends you back to Research or Innovate. That's the protocol working — not a sign of failure.
+
+Common loop-back triggers:
+
+- Review finds a constraint you didn't have during Research → loop back to Research.
+- Review finds the chosen option doesn't actually beat the alternatives once examined → loop back to Innovate.
+- Plan turns out to be incoherent when you try to Execute it → loop back to Plan.
+
+You loop back to the **earliest** phase that surfaces the gap. Then you run forward through the phases again. Don't try to patch in place.
+
+<Note>
+**TBD — Volta to verify:** the exact criteria for "this is a real loop-back trigger" vs "this is just normal iteration within Review" is Volta's call. The list above is the generic shape.
+</Note>
+
+## RIPER vs ad-hoc thinking
+
+What the protocol prevents:
+
+- **Premature commitment.** You picked the first idea before listing alternatives.
+- **Decision drift.** You "decided" something that's actually three different things in three different docs.
+- **Missing context.** You designed without reading the existing module that your design depends on.
+- **Plausible-but-wrong.** You produced a doc that reads well and falls apart at the first real question.
+
+Ad-hoc thinking gets you any of those, randomly. RIPER is the discipline that catches them before Stage 2.
+
+## Light vs full mode
+
+<Note>
+**TBD — Volta to verify:** whether RIPER runs in full on every Stage 1 task, or whether there's a "light" mode for small modules. The wave system implies depth varies — the page-level decision on whether RIPER itself shrinks or just its inputs do is Volta's call.
+</Note>
+
+The wave the project is in (see [Waves](/backend/workflow/waves)) controls how heavy each phase gets. At W1, Research might be ten minutes. At W3, Research is a half-day across multiple sources. The phases themselves don't change — their depth does.
+
+## Where to go next
+
+<CardGroup cols={2}>
+  <Card title="Mental Model" icon="brain" href="/backend/workflow/mental-model">
+    Why Stage 1 and Stage 2 are separated, and where RIPER fits.
+  </Card>
+  <Card title="Module Manifest" icon="file-contract" href="/backend/workflow/module-manifest">
+    The artifact that Execute typically produces — Stage 1's output.
+  </Card>
+</CardGroup>

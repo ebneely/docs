@@ -1,10 +1,136 @@
 ---
 title: "New module"
-description: "(WIP) The full path: fit-check → spec → plan → build → test → audit → ship"
+description: "The full path: fit-check → spec → plan → build → test → audit → ship"
 ---
 
 # New module
 
+This is the canonical end-to-end workflow. Most modules follow it. The depth of each step scales with your project's [wave](/backend/workflow/waves) — at W1 the flow is lighter, at W3+ each step is heavier — but the order of steps stays constant.
+
+If a step surfaces a question you cannot answer, stop. Return to Stage 1, fix the [manifest](/backend/workflow/module-manifest), and restart the affected steps. Do not patch around design questions inside Stage 2.
+
+## The flow
+
+<Steps>
+  <Step title="Fit-check">
+    Run a quick scope-validation pass. Confirm this work is real, sized for one module, and worth doing now. See [Fit-check](/backend/workflows/fit-check).
+
+    Output: a green light to proceed, or a redirect (different module, not now, needs more info).
+  </Step>
+
+  <Step title="RIPER planning in Obsidian">
+    Switch to Obsidian with Opus. Run the [RIPER protocol](/backend/workflow/riper) — Research, Innovate, Plan, Execute, Review.
+
+    Output: a complete [module manifest](/backend/workflow/module-manifest). Stage 2 cannot start without one.
+  </Step>
+
+  <Step title="Run /speckit.specify">
+    Switch to your codebase with Sonnet. Feed the manifest to SpecKit. See [/speckit.specify](/backend/prompts/speckit-specify).
+
+    Output: a build-ready spec inside the codebase.
+  </Step>
+
+  <Step title="Run /speckit.clarify">
+    Surface the ambiguities the spec did not resolve. See [/speckit.clarify](/backend/prompts/speckit-clarify).
+
+    If the questions are answerable from the manifest, answer in place. If any answer requires redesign, see "Common diversions" below.
+
+    <Note>
+    **TBD — Volta to verify:** whether `/speckit.clarify` is always run after `/speckit.specify`, or only when the spec output flags ambiguity.
+    </Note>
+  </Step>
+
+  <Step title="Run /speckit.plan">
+    Convert the clarified spec into an ordered implementation plan. See [/speckit.plan](/backend/prompts/speckit-plan).
+
+    Output: steps, dependencies, and the files each step touches.
+  </Step>
+
+  <Step title="Run /speckit-scaling">
+    Check the plan against the project's current wave. See [/speckit-scaling](/backend/prompts/speckit-scaling).
+
+    Output: scaling assumptions that will not hold at the current tier, plus ones that will break at the next.
+  </Step>
+
+  <Step title="Run /speckit-security">
+    Run the security pass calibrated to the wave. Lighter at W1, heavier at W3+. See [/speckit-security](/backend/prompts/speckit-security) and [Security review](/backend/workflows/security-review).
+
+    Output: findings sized for the wave — a checklist at W1, a structured review at W2, a full threat model at W3+.
+  </Step>
+
+  <Step title="Build the module">
+    Sonnet implements against the plan. Tests get scaffolded alongside the code.
+
+    <Note>
+    **TBD — Volta to verify:** whether there is a dedicated `/speckit.build` command (or equivalent) driving this step, or whether Sonnet writes code directly from the plan with no extra slash command.
+    </Note>
+  </Step>
+
+  <Step title="Run /speckit.analyze">
+    Read the implemented module against the spec, the plan, and any scaling or security findings. See [/speckit.analyze](/backend/prompts/speckit-analyze).
+
+    Output: gap report. Address every gap before shipping.
+
+    <Note>
+    **TBD — Volta to verify:** whether `/speckit.analyze` runs once at the end, or iteratively as build progresses.
+    </Note>
+  </Step>
+
+  <Step title="Ship">
+    Merge, deploy, monitor. The module's success criteria from the manifest are now the post-ship checks.
+  </Step>
+</Steps>
+
+## Wave-aware notes
+
 <Note>
-This page is a placeholder. Real content coming soon.
+At W1, steps 6 and 7 are lighter — `/speckit-scaling` flags only the obvious single-instance assumptions, and `/speckit-security` is a short checklist. At W3+, both are full reviews and may take significant time. The flow does not change — its depth does.
 </Note>
+
+## Common diversions
+
+<AccordionGroup>
+  <Accordion title="What if /speckit.clarify reveals a design gap?">
+    Stop Stage 2. Return to Stage 1. Re-enter Obsidian with Opus, re-run the relevant phase of [RIPER](/backend/workflow/riper) (usually Research or Innovate), update the manifest, add an ADR explaining the change. Then restart Stage 2 from `/speckit.specify` with the updated manifest. Do not try to patch the previous SpecKit run.
+  </Accordion>
+
+  <Accordion title="What if /speckit-scaling flags an assumption I cannot fix in this module?">
+    Decide whether the assumption is acceptable at the current wave. If yes, document it in an ADR and proceed. If no, the module's wave assessment in the manifest was wrong — return to Stage 1 and re-scope.
+  </Accordion>
+
+  <Accordion title="What if /speckit-security finds an issue mid-build?">
+    Treat it the same as `/speckit.clarify` revealing a gap. Stop, return to Stage 1, update the security baseline section of the manifest, restart Stage 2 from `/speckit.specify`.
+  </Accordion>
+
+  <Accordion title="What if /speckit.analyze reports gaps?">
+    Address each gap in place if it does not require redesign. If any gap reveals the spec was wrong, loop back to Stage 1.
+  </Accordion>
+</AccordionGroup>
+
+<Warning>
+Stage 2 does not redesign. Every diversion above ends with the same answer: stop, return to Stage 1, fix the manifest, restart Stage 2. This is the [mode lock](/backend/workflow/speckit) working.
+</Warning>
+
+## When NOT to use this flow
+
+The full flow is for new modules. Skip it for:
+
+- **Trivial bug fixes.** A one-line bug fix does not need a manifest.
+- **Doc-only changes.** Updating a README or a comment is not a module.
+- **Hotfixes.** Production-down work runs on a different cadence — fix first, write the manifest retroactively if the change is structural.
+
+For everything else, run the full flow. If a module feels too small to need it, the flow runs fast — that is the point.
+
+## Related
+
+<CardGroup cols={3}>
+  <Card title="Mental Model" href="/backend/workflow/mental-model">
+    The two-stage split this workflow lives inside.
+  </Card>
+  <Card title="Module Manifest" href="/backend/workflow/module-manifest">
+    The artifact step 2 produces and step 3 consumes.
+  </Card>
+  <Card title="Fit-check" href="/backend/workflows/fit-check">
+    The first gate of this flow.
+  </Card>
+</CardGroup>

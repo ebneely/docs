@@ -1,10 +1,24 @@
 ---
 title: "Decision trees"
-description: "(WIP) After Claude responds, decide what to do next"
+description: "After Claude responds, decide what to do next"
 ---
 
 # Decision trees
 
-<Note>
-This page is a placeholder. Real content coming soon.
-</Note>
+Decision trees are flowcharts in component form. Use them when Claude returns output and you're not sure what comes next.
+
+Each tree starts where a SpecKit command finishes. You walk it top-down, answer one question per step, and end at a single next action.
+
+<CardGroup cols={3}>
+  <Card title="After /speckit.specify" href="/backend/decisions/after-specify">
+    Walk this tree once `/speckit.specify` returns a draft spec.
+  </Card>
+  <Card title="After /speckit.plan" href="/backend/decisions/after-plan">
+    Walk this tree once `/speckit.plan` returns an implementation plan.
+  </Card>
+  <Card title="After /speckit-scaling" href="/backend/decisions/after-scaling">
+    Walk this tree once `/speckit-scaling` returns its wave-aware review.
+  </Card>
+</CardGroup>
+
+Each tree assumes you've just received Claude's output. Walk the tree to the right next step.

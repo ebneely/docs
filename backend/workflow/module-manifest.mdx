@@ -1,10 +1,115 @@
 ---
 title: "Module Manifest"
-description: "(WIP) The contract that says design is done and building can start"
+description: "The contract that ends Stage 1 and starts Stage 2"
 ---
 
 # Module Manifest
 
+The manifest is one document. It says "design is done. Building can start."
+
 <Note>
-This page is a placeholder. Real content coming soon.
+**Stage 2 cannot start without a manifest.** That's the whole point. The manifest is the wall between thinking and building.
 </Note>
+
+If you don't know what Stage 1 and Stage 2 are, start at [Mental Model](/backend/workflow/mental-model).
+
+## What the manifest captures
+
+A complete manifest answers every question Stage 2 will ask. At minimum:
+
+- **Module scope.** What this module owns. What it deliberately does NOT own. What it depends on.
+- **User stories or use cases.** The concrete situations this module exists to handle. Written from the caller's perspective.
+- **Data model sketch.** Entities, their relations, the cardinalities. Not table DDL, not column types — the conceptual shape.
+- **API surface.** Endpoints (or function signatures), request/response shapes, error cases. Not byte-level, but enough that two readers would build the same thing.
+- **Wave assessment.** Which W is this module sized for? See [Waves](/backend/workflow/waves). The wave drives how much depth every other section needs.
+- **Security baseline.** The threats that matter at this wave, and the controls that address them. Lighter at W1, heavier at W3+.
+- **Success criteria.** How you know the module is done. Behavioral, not "code compiles." Tied to the user stories.
+- **ADRs.** Decisions made during planning, with their rationale. Each ADR captures the alternatives considered and why this one won.
+
+<Note>
+**TBD — Volta to verify:** whether the manifest is a single file containing all of these as sections, or several files (e.g. `manifest.md` + separate `adrs/*.md` + a separate threat model) under a module folder.
+</Note>
+
+## What the manifest does NOT capture
+
+These belong to Stage 2, not Stage 1:
+
+- **Code.** Not even pseudo-code beyond what's needed to describe an API shape.
+- **Exact DDL.** Column types, indexes, migrations — generated from the data model sketch in Stage 2.
+- **Byte-level URLs and protocol details.** Endpoint shape lives in the manifest; exact URL paths are a Stage 2 decision.
+- **Deployment specifics.** Hosting choices, environment variables, infrastructure config — Stage 2 outputs.
+- **File layout in the codebase.** Module structure inside the project belongs to the build phase.
+
+If you find yourself writing one of these in the manifest, stop. You've crossed the wall.
+
+## Where it lives
+
+The manifest lives in the project's Obsidian vault, alongside the module's other planning docs (RIPER notes, ADRs, threat models if any). It's the canonical artifact of Stage 1 for that module.
+
+<Note>
+**TBD — Volta to verify:** the exact section ordering inside the manifest (does scope come first, or user stories? does the wave assessment go at the top as a banner, or inline?) is Volta's convention.
+</Note>
+
+## Manifest completeness
+
+A manifest is complete when Stage 2 can run end-to-end without Sonnet asking a single question that requires you to think.
+
+Operationally:
+
+- If `/speckit.specify` runs and produces a clean spec, the manifest was complete.
+- If `/speckit.clarify` returns questions that you can answer from the manifest by quoting it, the manifest was complete.
+- If `/speckit.clarify` returns questions you cannot answer without going back to design, **the manifest was incomplete**. Stop Stage 2. Loop back to Stage 1.
+
+This is not an error state. It's the system telling you the truth — that the design wasn't finished, and now you know exactly where the gap is.
+
+<Note>
+**TBD — Volta to verify:** the exact format conventions (frontmatter schema? heading levels? specific tags?) for the manifest are Volta's call. The structure above is the generic shape.
+</Note>
+
+## Manifest evolution
+
+The manifest is versioned alongside the code. When a Stage 2 finding requires redesign:
+
+<Steps>
+  <Step title="Stop Stage 2">
+    Don't keep building. The current spec is wrong; building further compounds the error.
+  </Step>
+  <Step title="Return to Stage 1">
+    Re-enter Obsidian, re-engage Opus, re-run the relevant phase of [RIPER](/backend/workflow/riper) — usually starting from Research or Innovate, not Execute.
+  </Step>
+  <Step title="Update the manifest">
+    Edit the manifest in place. Add an ADR explaining the change and what triggered it. The diff captures the design's evolution.
+  </Step>
+  <Step title="Restart Stage 2">
+    Switch back to Sonnet. Run [SpecKit](/backend/workflow/speckit) again from `/speckit.specify`. Don't try to patch the previous Stage 2 run; restart it from a clean spec.
+  </Step>
+</Steps>
+
+This sounds expensive. The alternative — patching the spec inside Stage 2 — produces modules that drift from their own design and become impossible to reason about three months later. The restart pays for itself.
+
+## How heavy is a manifest?
+
+The manifest's size scales with the wave:
+
+- **W1.** A page or two. Scope, a handful of user stories, an entity sketch, a few endpoints, light security. Done in an afternoon.
+- **W2.** Two to five pages. Real ADRs for non-trivial decisions, explicit success criteria, a security baseline appropriate to early growth.
+- **W3+.** Multiple documents under a module folder. Formal threat model, capacity assessment, explicit non-functional requirements, multiple ADRs. Days, not hours.
+
+The contents are the same shape. The depth is what changes.
+
+## Where to go next
+
+<CardGroup cols={2}>
+  <Card title="Mental Model" icon="brain" href="/backend/workflow/mental-model">
+    Why the manifest exists and what it's a wall between.
+  </Card>
+  <Card title="RIPER" icon="compass" href="/backend/workflow/riper">
+    The Stage 1 protocol that produces the manifest.
+  </Card>
+  <Card title="SpecKit" icon="hammer" href="/backend/workflow/speckit">
+    The Stage 2 framework that consumes the manifest.
+  </Card>
+  <Card title="Waves" icon="signal" href="/backend/workflow/waves">
+    The W1–W4 ladder that scales the manifest's depth.
+  </Card>
+</CardGroup>

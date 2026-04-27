@@ -1,10 +1,66 @@
 ---
 title: "After /speckit.plan"
-description: "(WIP) Decision tree for handling the output of a /speckit.plan call"
+description: "Decision tree for handling the output of a /speckit.plan call"
 ---
 
 # After /speckit.plan
 
+You just ran [`/speckit.plan`](/backend/prompts/speckit-plan). The output is an ordered implementation plan. Walk this tree before you let any code change.
+
+<Steps>
+  <Step title="Does the plan match the spec's intent?">
+    Read the plan against the spec it was built from. Each plan step should map to something the spec actually called for.
+
+    - **No:** stop. The plan diverged from the spec. Return to Stage 1, reconcile the gap, then re-run [`/speckit.specify`](/backend/prompts/speckit-specify) and [`/speckit.plan`](/backend/prompts/speckit-plan) from a clean spec.
+    - **Yes:** continue to step 2.
+
+    <Note>
+    **TBD — Volta to verify:** the exact rubric for "matches intent" — whether a step-by-step trace is required, or whether a quick read-through suffices.
+    </Note>
+  </Step>
+
+  <Step title="Does the plan introduce new components or files not anticipated in the spec?">
+    Scan the plan for files, modules, or surfaces that the spec didn't mention. Some elaboration is normal in Stage 2; net-new architectural pieces are not.
+
+    - **Yes:** treat as a possible scope drift signal and decide whether to absorb the addition or push it back to Stage 1.
+    - **No:** continue to step 3.
+
+    <Note>
+    **TBD — Volta to verify:** whether new components in the plan are a Stage 1 return-trip or acceptable Stage 2 elaboration. The threshold (e.g. "any new top-level file" vs "any new architectural concern") is Volta's call.
+    </Note>
+  </Step>
+
+  <Step title="Does the test strategy in the plan cover the spec's user stories?">
+    Each user story in the spec should map to at least one test the plan commits to writing.
+
+    - **No:** log it as a coverage gap. Decide whether to extend the plan now, or accept the hole and document the trade-off.
+    - **Yes:** continue to step 4.
+
+    <Note>
+    **TBD — Volta to verify:** whether `/speckit.plan` is expected to produce a test strategy inline, or whether tests are tracked in a separate artifact. Also TBD: where coverage gaps get logged.
+    </Note>
+  </Step>
+
+  <Step title="All clean? Run /speckit-scaling">
+    Plan matches intent, no surprise components, test strategy covers the stories. Run [`/speckit-scaling`](/backend/prompts/speckit-scaling) to check the plan against the project's current [wave](/backend/workflow/waves).
+  </Step>
+</Steps>
+
+<Warning>
+The [mode lock](/backend/workflow/speckit) still applies. If any of the checks above force a redesign — not a tightening — stop and return to Stage 1. Patching the plan in place to dodge a Stage 1 question is exactly the failure mode the two-stage workflow is built to prevent.
+</Warning>
+
 <Note>
-This page is a placeholder. Real content coming soon.
+**TBD — Volta to verify:** the exact post-plan checks above are this playbook's generic shape. Volta's specific protocol — what counts as drift, what triggers a return-trip vs an inline edit, where gaps get logged — overrides this page.
 </Note>
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="/speckit.plan" href="/backend/prompts/speckit-plan">
+    The command whose output this tree handles.
+  </Card>
+  <Card title="After /speckit-scaling" href="/backend/decisions/after-scaling">
+    The next decision tree once the scaling review returns.
+  </Card>
+</CardGroup>
