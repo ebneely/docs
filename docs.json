@@ -12,12 +12,17 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "Backend",
+        "tab": "Welcome",
         "groups": [
           {
             "group": "Start here",
             "pages": ["index"]
-          },
+          }
+        ]
+      },
+      {
+        "tab": "Backend",
+        "groups": [
           {
             "group": "The workflow",
             "pages": [
@@ -64,7 +69,7 @@
           },
           {
             "group": "Reference",
-            "pages": ["glossary"]
+            "pages": ["backend/glossary"]
           }
         ]
       },
@@ -72,38 +77,30 @@
         "tab": "Frontend",
         "groups": [
           {
-            "group": "Start here",
-            "pages": ["index"]
-          },
-          {
-            "group": "The mindset",
+            "group": "The workflow",
             "pages": [
               "frontend/mindset/design-first",
               "frontend/mindset/components",
               "frontend/mindset/polish",
-              "frontend/mindset/accessibility"
-            ]
-          },
-          {
-            "group": "Prompts",
-            "pages": ["frontend/prompts/index"]
-          },
-          {
-            "group": "Workflows",
-            "pages": [
-              "frontend/workflows/index",
+              "frontend/mindset/accessibility",
+              "frontend/prompts/index",
               "frontend/workflows/new-component",
               "frontend/workflows/design-review",
-              "frontend/workflows/accessibility-audit"
+              "frontend/workflows/accessibility-audit",
+              "frontend/decisions/index"
             ]
-          },
-          {
-            "group": "Decision trees",
-            "pages": ["frontend/decisions/index"]
           },
           {
             "group": "Reference",
-            "pages": ["glossary"]
+            "pages": [
+              "frontend/design-tokens/index",
+              "frontend/design-tokens/radix",
+              "frontend/design-tokens/linear",
+              "frontend/design-tokens/vercel",
+              "frontend/design-tokens/stripe",
+              "frontend/design-tokens/tailwind",
+              "frontend/glossary"
+            ]
           }
         ]
       }

@@ -1,0 +1,298 @@
+---
+title: "Tailwind-flavored tokens"
+description: "Opinionated defaults, maximum flexibility"
+---
+
+# Tailwind-flavored tokens
+
+<Note>
+This is a starter variant. Tweak before using on a real project — the values reflect the source design system's defaults, not your specific needs.
+</Note>
+
+## Overview
+
+Modeled directly on Tailwind CSS's default theme. The aesthetic is generic-but-opinionated — well-documented defaults that compose cleanly with the wider Tailwind ecosystem. Use this variant when you want maximum flexibility, when the team already runs Tailwind, or when the project's visual identity has not yet been chosen.
+
+## Tokens (JSON)
+
+```json
+{
+  "color": {
+    "neutral-slate": {
+      "50":"hsl(210,40%,98%)","100":"hsl(210,40%,96%)","200":"hsl(214,32%,91%)","300":"hsl(213,27%,84%)",
+      "400":"hsl(215,20%,65%)","500":"hsl(215,16%,47%)","600":"hsl(215,19%,35%)","700":"hsl(215,25%,27%)",
+      "800":"hsl(217,33%,17%)","900":"hsl(222,47%,11%)","950":"hsl(229,84%,5%)"
+    },
+    "blue":  { "500":"hsl(217,91%,60%)", "600":"hsl(221,83%,53%)", "700":"hsl(224,76%,48%)" },
+    "red":   { "500":"hsl(0,84%,60%)",   "600":"hsl(0,72%,51%)" },
+    "green": { "500":"hsl(142,71%,45%)", "600":"hsl(142,76%,36%)" },
+    "amber": { "500":"hsl(38,92%,50%)",  "600":"hsl(32,95%,44%)" },
+    "white": "hsl(0,0%,100%)",
+    "black": "hsl(0,0%,0%)"
+  },
+  "typography": {
+    "family": { "sans": "Inter, ui-sans-serif, system-ui, sans-serif", "mono": "JetBrains Mono, ui-monospace, monospace" },
+    "size":   { "xs":"12px","sm":"14px","base":"16px","lg":"18px","xl":"20px","2xl":"24px","3xl":"30px","4xl":"36px","5xl":"48px","6xl":"60px" },
+    "leading":{ "xs":"16px","sm":"20px","base":"24px","lg":"28px","xl":"28px","2xl":"32px","3xl":"36px","4xl":"40px","5xl":"1","6xl":"1" },
+    "weight": { "normal": 400, "medium": 500, "semibold": 600, "bold": 700 }
+  },
+  "spacing": {
+    "0":"0","px":"1px","0.5":"2px","1":"4px","1.5":"6px","2":"8px","2.5":"10px","3":"12px","3.5":"14px",
+    "4":"16px","5":"20px","6":"24px","7":"28px","8":"32px","9":"36px","10":"40px","11":"44px","12":"48px",
+    "14":"56px","16":"64px","20":"80px","24":"96px"
+  },
+  "sizing": { "control-sm": "32px", "control-md": "40px", "control-lg": "48px" },
+  "radius": { "none":"0","sm":"2px","DEFAULT":"4px","md":"6px","lg":"8px","xl":"12px","2xl":"16px","3xl":"24px","full":"9999px" },
+  "shadow": {
+    "sm":"0 1px 2px 0 rgb(0 0 0 / 0.05)",
+    "DEFAULT":"0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
+    "md":"0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+    "lg":"0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
+    "xl":"0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
+    "2xl":"0 25px 50px -12px rgb(0 0 0 / 0.25)",
+    "inner":"inset 0 2px 4px 0 rgb(0 0 0 / 0.05)",
+    "none":"none"
+  },
+  "motion":  { "75":"75ms","100":"100ms","150":"150ms","200":"200ms","300":"300ms","500":"500ms","700":"700ms","1000":"1000ms" },
+  "easing":  { "linear":"linear","in":"cubic-bezier(0.4, 0, 1, 1)","out":"cubic-bezier(0, 0, 0.2, 1)","in-out":"cubic-bezier(0.4, 0, 0.2, 1)" }
+}
+```
+
+These values match Tailwind v3 defaults where recallable. Slate is shown as the neutral example; gray, zinc, neutral, and stone follow the same shape with different hues.
+
+## Tokens (CSS)
+
+```css
+:root {
+  --color-slate-50:  hsl(210,40%,98%);
+  --color-slate-100: hsl(210,40%,96%);
+  --color-slate-200: hsl(214,32%,91%);
+  --color-slate-300: hsl(213,27%,84%);
+  --color-slate-400: hsl(215,20%,65%);
+  --color-slate-500: hsl(215,16%,47%);
+  --color-slate-600: hsl(215,19%,35%);
+  --color-slate-700: hsl(215,25%,27%);
+  --color-slate-800: hsl(217,33%,17%);
+  --color-slate-900: hsl(222,47%,11%);
+  --color-slate-950: hsl(229,84%,5%);
+
+  --color-blue-500:  hsl(217,91%,60%);
+  --color-blue-600:  hsl(221,83%,53%);
+  --color-blue-700:  hsl(224,76%,48%);
+  --color-red-500:   hsl(0,84%,60%);
+  --color-red-600:   hsl(0,72%,51%);
+  --color-green-500: hsl(142,71%,45%);
+  --color-green-600: hsl(142,76%,36%);
+  --color-amber-500: hsl(38,92%,50%);
+
+  --font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
+  --font-mono: JetBrains Mono, ui-monospace, monospace;
+
+  --text-xs: 12px;  --text-sm: 14px;  --text-base: 16px; --text-lg: 18px;
+  --text-xl: 20px;  --text-2xl: 24px; --text-3xl: 30px;  --text-4xl: 36px; --text-5xl: 48px;
+
+  --space-1: 4px;   --space-2: 8px;   --space-3: 12px;  --space-4: 16px;
+  --space-5: 20px;  --space-6: 24px;  --space-8: 32px;  --space-10: 40px;
+  --space-12: 48px; --space-16: 64px; --space-20: 80px; --space-24: 96px;
+
+  --radius-sm: 2px; --radius-default: 4px; --radius-md: 6px;
+  --radius-lg: 8px; --radius-xl: 12px;     --radius-2xl: 16px;
+  --radius-3xl: 24px; --radius-full: 9999px;
+
+  --shadow-sm:      0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-default: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-md:      0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg:      0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl:      0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+  --motion-75: 75ms;   --motion-100: 100ms; --motion-150: 150ms; --motion-200: 200ms;
+  --motion-300: 300ms; --motion-500: 500ms; --motion-700: 700ms; --motion-1000: 1000ms;
+
+  --ease-linear: linear;
+  --ease-in:     cubic-bezier(0.4, 0, 1, 1);
+  --ease-out:    cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dark {
+  /* Tailwind dark mode uses the class strategy by default. */
+  --color-bg:      var(--color-slate-950);
+  --color-surface: var(--color-slate-900);
+  --color-text:    var(--color-slate-100);
+}
+```
+
+## Motion + easing detail
+
+Tailwind ships eight duration steps and four easings, all available as utility classes (`duration-150`, `ease-out`, etc.).
+
+```css
+.transition-color { transition: color var(--motion-150) var(--ease-out); }
+.transition-bg    { transition: background-color var(--motion-200) var(--ease-out); }
+.transition-card  { transition: box-shadow var(--motion-200) var(--ease-out), transform var(--motion-200) var(--ease-out); }
+.transition-modal { transition: transform var(--motion-300) var(--ease-in-out), opacity var(--motion-300) var(--ease-out); }
+```
+
+Defaults: `--ease-out` for entrances and hover. `--ease-in-out` for symmetric transitions. Avoid `--ease-linear` — it is a rookie tell.
+
+<Note>
+**TBD — Volta to verify:** whether to track Tailwind v3 defaults (shown above) or v4 (some defaults shifted, OKLCH color space). v3 is current for most repos as of writing.
+</Note>
+
+## Why these values
+
+- **Tailwind interop is the whole point.** Mapping these tokens to `tailwind.config.js` gives you utility classes for free. No translation layer.
+- **Defaults are documented.** Every value above is in the Tailwind docs. No guessing, no undocumented magic numbers — newcomers have a public reference.
+- **Class-strategy dark mode keeps full control.** `<html class="dark">` toggles the variant. Better than `prefers-color-scheme` because users override OS preference.
+- **Maximum flexibility, opinion-light.** This variant ships no strong stylistic posture. That is the trade-off — pick this when the project's visual identity is not yet chosen.
+- **When NOT to use it.** If the product needs a strong opinion (premium-warm like Stripe, sharp-technical like Vercel), pick the matching variant. Tailwind defaults give competent neutral output, not character.
+- **Neutral scale is a real choice.** Slate (cool), gray (true-neutral), zinc (neutral with a hint of warm), neutral (chromaless), stone (warm). Pick one and stay with it across the project.
+
+## Claude Design prompts
+
+### Setup prompt
+
+```
+You are setting up design tokens for a new project using the Tailwind-flavored variant.
+
+Implement the tokens from /frontend/design-tokens/tailwind in two places:
+
+1. As CSS custom properties on :root in a globals.css file (for non-utility consumers).
+2. As theme extensions in tailwind.config.js so utilities like bg-slate-900, text-blue-600, p-6 resolve to the same values.
+
+Example tailwind.config.js theme.extend:
+
+  colors: {
+    slate: { 50: 'hsl(210,40%,98%)', 100: 'hsl(210,40%,96%)', 200: 'hsl(214,32%,91%)', /* ... */ },
+    blue:  { 500: 'hsl(217,91%,60%)', 600: 'hsl(221,83%,53%)', 700: 'hsl(224,76%,48%)' },
+  },
+  fontFamily: {
+    sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+    mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+  },
+
+Dark mode: class strategy. Set darkMode: 'class' in tailwind.config.js. Toggle <html class="dark"> from your theme switcher.
+
+Pick one neutral scale and stay with it: slate (cool), gray (default), zinc (slight warmth), neutral (chromaless), or stone (warm). Do not mix.
+
+Confirm both globals.css and tailwind.config.js are wired before generating any component.
+```
+
+### Component prompt
+
+```
+Generate a [COMPONENT_NAME] component using the Tailwind-flavored token set.
+
+Aesthetic: opinionated Tailwind defaults. Light by default, dark via the class strategy.
+
+Constraint: use Tailwind utility classes only. No inline styles. No custom CSS classes outside Tailwind utilities. No arbitrary values like p-[13px] - every value comes from the scale.
+
+Produce all states: default, hover (hover:), focus-visible (focus-visible:), active (active:), disabled (disabled:), loading if applicable. Dark variants on every relevant utility (dark:bg-slate-900, dark:text-slate-100, etc.).
+
+Constraints:
+- Spacing from the 4px-base scale (p-1 through p-24).
+- Radius from {rounded-sm, rounded, rounded-md, rounded-lg, rounded-xl, rounded-2xl}.
+- Motion via {transition, duration-{75|100|150|200|300}, ease-out|ease-in-out}.
+- One neutral scale (chosen at setup) plus blue/red/green/amber for accents and status.
+- Type sizes from {text-xs, text-sm, text-base, text-lg, text-xl, text-2xl, ...}. No arbitrary sizes.
+
+Return the component as plain HTML or a React component. Markup only - no extracted CSS.
+```
+
+### Polish review prompt
+
+```
+Review this component against the Tailwind-flavored polish bar. Walk every dimension and flag anything below standard.
+
+1. Utility-class consistency - every spacing, color, radius, and motion value comes from a Tailwind utility, not an arbitrary value.
+2. Spacing scale - all gaps and padding are from the 4px-base scale (p-1, p-2, ..., p-24). No p-[13px] one-offs.
+3. Radius defaults - rounded values from {rounded-sm, rounded, rounded-md, rounded-lg, rounded-xl, rounded-2xl}.
+4. Motion - transitions use duration-* utilities, not arbitrary ms values. Easing via ease-out, ease-in, or ease-in-out (no linear).
+5. Dark-mode coverage - every color utility has a paired dark: variant. No leaks where dark mode reveals light-only colors.
+6. Class-strategy dark mode - is darkMode set to 'class' in config, and is the toggle wired through <html class="dark">?
+7. Neutral discipline - is one neutral scale used (slate OR gray OR zinc OR neutral OR stone), not mixed?
+8. State coverage - hover:, focus-visible:, active:, disabled: all defined on every interactive element?
+
+For each violation return the offending utility and the corrected utility.
+```
+
+## Sample component
+
+A button using only Tailwind utilities — primary action, blue accent, slate neutral, full state coverage.
+
+```html
+<button
+  type="button"
+  class="
+    inline-flex items-center gap-2
+    px-4 py-2
+    bg-blue-600 hover:bg-blue-700 active:bg-blue-700
+    text-white text-sm font-medium
+    rounded-md
+    shadow-sm
+    transition-colors duration-150 ease-out
+    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2
+    disabled:bg-slate-300 disabled:text-slate-500 disabled:cursor-not-allowed
+    dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus-visible:ring-offset-slate-900
+  "
+>
+  Save changes
+</button>
+```
+
+## Override examples
+
+Switch the neutral scale from slate (cool) to zinc (slightly warm):
+
+```css
+/* before */ --color-slate-900: hsl(222,47%,11%);
+/* after  */ --color-zinc-900:  hsl(240,6%,10%);
+```
+
+Switch dark mode from class to media-query:
+
+```js
+// before — tailwind.config.js
+darkMode: 'class',
+// after
+darkMode: 'media',
+```
+
+Tighten the default border radius for a sharper aesthetic:
+
+```js
+// tailwind.config.js theme.extend.borderRadius
+borderRadius: { DEFAULT: '4px', md: '4px', lg: '6px', xl: '8px' },
+```
+
+<Note>
+**TBD — Volta to verify:** Volta's preferred neutral scale (slate / gray / zinc / neutral / stone). The example uses slate; pick one project-wide.
+</Note>
+
+<Note>
+**TBD — Volta to verify:** whether to track Tailwind v3 (current for most repos) or v4 (newer, OKLCH color space, some default shifts).
+</Note>
+
+<Note>
+**TBD — Volta to verify:** whether to ship custom plugins (forms, typography, container-queries) or stay on the core defaults.
+</Note>
+
+## Other variants
+
+<CardGroup cols={3}>
+  <Card title="Variant catalog" href="/frontend/design-tokens/index">
+    All variants and how to choose.
+  </Card>
+  <Card title="Radix" href="/frontend/design-tokens/radix">
+    Accessible defaults, neutral tone.
+  </Card>
+  <Card title="Linear" href="/frontend/design-tokens/linear">
+    Dense, fast, dark-leaning product UI.
+  </Card>
+  <Card title="Vercel" href="/frontend/design-tokens/vercel">
+    Minimalist, sharp, dark-default dev tools.
+  </Card>
+  <Card title="Stripe" href="/frontend/design-tokens/stripe">
+    Confident, premium, light-default.
+  </Card>
+</CardGroup>

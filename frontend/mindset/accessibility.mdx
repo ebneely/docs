@@ -1,10 +1,109 @@
 ---
 title: "Accessibility"
-description: "(WIP) Building for everyone from day one, not retrofitted later"
+description: "Building for everyone from day one, not retrofitted later"
 ---
 
 # Accessibility
 
+Accessibility is not a separate concern. It is part of the work. Retrofitting costs ten times more than building it in, and the retrofit is never as good as building it in from the start.
+
 <Note>
-This page is a placeholder. Real content coming soon.
+**Accessibility is a build-time discipline, not a release-time checklist.** Build it in or live with the gap.
 </Note>
+
+The reason retrofits fail is structural. Accessibility lives in component decisions — semantic HTML, focus order, ARIA roles, keyboard handlers — and rewriting those decisions after a component ships means rewriting the component. Most teams do not, so they ship a parallel "accessible mode" and call it done.
+
+## The four pillars
+
+<CardGroup cols={2}>
+  <Card title="Keyboard navigation" icon="keyboard">
+    Every interactive element reachable. Focus visible. Focus order logical.
+
+    No mouse-only flows. Tab through the page like a user who cannot see it.
+  </Card>
+  <Card title="Screen reader support" icon="ear-listen">
+    Semantic HTML first. ARIA labels where needed, not everywhere.
+
+    Live regions for dynamic content. Headings in correct order.
+  </Card>
+  <Card title="Color contrast" icon="circle-half-stroke">
+    WCAG AA minimum. AAA where text is small.
+
+    Do not rely on color alone for state — pair with icon, text, or shape.
+  </Card>
+  <Card title="Focus management" icon="bullseye">
+    Modals trap focus. Route changes restore focus. Dynamic content announces.
+
+    Focus is the screen reader's cursor — manage it deliberately.
+  </Card>
+</CardGroup>
+
+## The myth
+
+<Warning>
+"We will add accessibility later." You will not. Accessibility added retroactively becomes a separate codebase you maintain in parallel — alt text bolted onto images, ARIA bandaged onto divs, screen reader tests run once and then forgotten.
+
+Either build it in from the first component, or accept that the audit will surface debt that costs more to fix than it cost to skip.
+</Warning>
+
+## Common failure modes
+
+- Interactive divs without `role` or `tabindex` — clickable but invisible to keyboards and screen readers.
+- Color-only state indicators — a red border with no icon, a green text with no checkmark. Color-blind users see no state.
+- Modals that do not trap focus — Tab walks out of the modal into the page behind, breaking the user's place.
+- No keyboard alternative for hover-revealed content — tooltips, dropdowns, hover menus that disappear when you stop hovering.
+- Missing focus-visible styles — focus rings removed in CSS without a replacement, leaving keyboard users blind.
+- Form errors announced visually but not to screen readers — a red border and a tooltip, but no `aria-describedby` linking the error to the field.
+
+Each of these is a one-line decision at build time and a multi-hour fix at audit time.
+
+## Wave-aware accessibility
+
+<Tabs>
+  <Tab title="W1">
+    The must-haves.
+
+    - Keyboard navigation works on every interactive element.
+    - Color contrast meets WCAG AA for body text.
+    - Semantic HTML — buttons are buttons, headings are headings, lists are lists.
+    - Focus visible everywhere.
+  </Tab>
+
+  <Tab title="W2">
+    W1 plus screen reader testing on critical paths — auth, payment, account management. Tested on at least one screen reader. Form errors announced. Live regions for async state.
+  </Tab>
+
+  <Tab title="W3">
+    Full WCAG AA compliance, audited against the criteria. Automated checks in CI. Manual screen reader pass per major release. Skip links, landmark regions, and reduced-motion respect.
+  </Tab>
+
+  <Tab title="W4">
+    AAA where applicable. Regular audit cadence. Compliance posture documented. Accessibility integrated into every component review, not bolted onto release.
+  </Tab>
+</Tabs>
+
+The depth scales with [wave](/backend/workflow/waves). The principle does not — keyboard, contrast, semantic HTML are W1 too.
+
+## The accessibility audit
+
+What to check, when to run it, who runs it. The audit is a structured pass through the four pillars — automated tools catch the obvious failures, manual testing catches the subtle ones.
+
+See [Accessibility audit](/frontend/workflows/accessibility-audit) for the workflow.
+
+<Note>
+**TBD — Volta to verify:** Volta's target compliance level (WCAG AA at all waves? AAA at W3+? a different framework like EN 301 549?), and which automated testing tools are part of the audit (axe? Lighthouse? Pa11y? a CI integration?).
+</Note>
+
+## Where to go next
+
+<CardGroup cols={3}>
+  <Card title="Accessibility audit" href="/frontend/workflows/accessibility-audit">
+    When and how to audit.
+  </Card>
+  <Card title="Component thinking" href="/frontend/mindset/components">
+    Where accessibility lives in code.
+  </Card>
+  <Card title="Waves" href="/backend/workflow/waves">
+    Why depth scales with project tier.
+  </Card>
+</CardGroup>

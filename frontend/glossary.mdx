@@ -1,0 +1,78 @@
+---
+title: "Glossary"
+description: "Frontend terms used across this tab"
+---
+
+# Glossary
+
+Every term used elsewhere in the frontend tab is defined here once. Pages link here instead of redefining.
+
+<AccordionGroup>
+  <Accordion title="ADR (Architecture Decision Record)">
+    A short document recording a design decision — the alternatives considered, the choice, and the reason. Lives in the project's planning vault. Future components read prior ADRs to understand existing visual or interaction commitments before designing new ones.
+  </Accordion>
+
+  <Accordion title="Component">
+    The unit of frontend work. A self-contained chunk of UI with its own props (interface), states (behavior), and visual contract. Ranges from a single primitive (Button, Input) to a composed page. Each component has its own design → mockup → implementation cycle.
+  </Accordion>
+
+  <Accordion title="Component layers">
+    Components stack in three layers: **primitives** (Button, Input, Card — the atoms), **compositions** (LoginForm, ProductCard — assembled from primitives), and **pages / layouts** (full screens — assembled from compositions). Composition rule: never reach down a layer. See [Component thinking](/frontend/mindset/components).
+  </Accordion>
+
+  <Accordion title="Decision tree">
+    A structured flowchart used to answer "what do you do next?" after Claude Design returns a result. Each step is a condition, an action, and a pointer to the next step. Decision-tree pages live under [Frontend → Decision trees](/frontend/decisions/index) and use Mintlify `<Steps>` components, not prose.
+  </Accordion>
+
+  <Accordion title="Design first">
+    The philosophical core of the frontend playbook: the design phase happens before the implementation phase, never overlapping. The high-fidelity mockup is the boundary between them. See [Design first](/frontend/mindset/design-first).
+  </Accordion>
+
+  <Accordion title="Design tokens">
+    The variables that define a UI's look — colors, typography, spacing, sizing, motion, easing, radius, shadows. Tokens compile into CSS custom properties and JSON for build-time consumption. The lowest layer of the design system. See [Design tokens](/frontend/design-tokens/index).
+  </Accordion>
+
+  <Accordion title="High-fidelity mockup">
+    The document that ends the design phase and starts the implementation phase. Frontend equivalent of the backend module manifest. A mockup is complete when a developer building from it cannot ask "what should this look like?" See [Design first](/frontend/mindset/design-first).
+
+    <Note>
+    **TBD — Volta to verify:** the exact format of the mockup (Figma file? Claude Design canvas? screenshots in markdown?) is Volta's convention.
+    </Note>
+  </Accordion>
+
+  <Accordion title="Mindset">
+    One of the two top-level orientations in the playbook: **backend** or **frontend**. Each is a distinct discipline with different tools, optima, and decision shapes. The playbook treats them as separate tabs because the work shapes are genuinely different — backend optimizes for correctness, frontend for human experience.
+  </Accordion>
+
+  <Accordion title="Playbook">
+    This guidebook itself. The canonical operating manual for running Claude across every project. Project-agnostic by definition — specific projects apply the playbook independently and never appear inside it.
+  </Accordion>
+
+  <Accordion title="Polish">
+    The level of detail that separates pro UI from amateur UI. Covers spacing rhythm, alignment, type hierarchy, motion timing, easing curves, state coverage, and empty states. Polish is a standard, not a stage — applied throughout the work, not added at the end. See [Polish](/frontend/mindset/polish).
+  </Accordion>
+
+  <Accordion title="Prompt pattern">
+    The standard structure of a prompt page in this playbook. Every prompt page has four sections in this exact order: **When to use**, **The prompt**, **What you get back**, **What to do next**. Frontend concrete prompts mostly live inside the [design-token variant pages](/frontend/design-tokens/index) — each variant ships setup, component-generation, and polish-review prompts.
+  </Accordion>
+
+  <Accordion title="Variant">
+    A design-token starter set anchored on a real design system. The frontend playbook ships five: [Radix](/frontend/design-tokens/radix), [Linear](/frontend/design-tokens/linear), [Vercel](/frontend/design-tokens/vercel), [Stripe](/frontend/design-tokens/stripe), [Tailwind](/frontend/design-tokens/tailwind). Pick one, copy the tokens, override what doesn't fit.
+  </Accordion>
+
+  <Accordion title="Wave (W1–W4)">
+    The project's current maturity tier — same wave applies across both tabs. Determines how deep frontend audits go: at W1 the accessibility audit covers keyboard + contrast + semantic HTML; at W3+ it is full WCAG AA with tooling. Defined canonically on the [Backend → Waves](/backend/workflow/waves) page.
+
+    <Note>
+    **TBD — Volta to verify:** whether frontend audit depth scales identically to backend, or whether frontend has its own wave gradation.
+    </Note>
+  </Accordion>
+
+  <Accordion title="Workflow">
+    An end-to-end recipe in the frontend playbook (e.g. New component, Design review, Accessibility audit). Workflows span the full path from design tokens to shipped UI. Live under [Frontend → Workflows](/frontend/workflows/index).
+  </Accordion>
+</AccordionGroup>
+
+## How terms get added
+
+A new term enters the glossary when it appears on more than one page and needs a single canonical definition. Terms specific to a single page get defined on that page, not here.

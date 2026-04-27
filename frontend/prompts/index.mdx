@@ -1,10 +1,33 @@
 ---
 title: "Prompts"
-description: "(WIP) Frontend slash commands — placeholder until commands are designed"
+description: "Frontend slash commands for use with Claude Design"
 ---
 
 # Prompts
 
+Frontend prompts run with Claude Design (or whichever visual-aware tool you use). They focus on design tokens, component generation, polish review, and accessibility audit. The shape mirrors the backend prompt pages — when to use, the prompt itself, what comes back, what to do next — but the artifacts are mockups and components, not specs and code.
+
 <Note>
-This page is a placeholder. Real content coming soon.
+Most concrete frontend prompts live inside the design-token variant pages. Each variant has setup, component-generation, and polish-review prompts tuned to its aesthetic. Start there if you need a copy-paste-ready prompt.
 </Note>
+
+## Where the real prompts live
+
+<CardGroup cols={2}>
+  <Card title="Design tokens" href="/frontend/design-tokens/index">
+    Variant pages with setup, component-generation, and polish-review prompts each.
+  </Card>
+  <Card title="Workflows" href="/frontend/workflows/index">
+    End-to-end flows that invoke the prompts in sequence.
+  </Card>
+</CardGroup>
+
+<Note>
+Dedicated frontend slash-command pages aren't written yet. They'll come once Volta has run frontend work with the playbook and refined the prompts in practice. Until then, the variant pages and workflow pages carry the prompt content inline.
+</Note>
+
+## Where these fit in context
+
+Frontend prompts assume you've already picked a token variant. If you haven't, [start there](/frontend/design-tokens/index). The token choice constrains every prompt downstream — a component-generation prompt without locked tokens produces generic output.
+
+For the philosophical anchor, see [Design first](/frontend/mindset/design-first).

@@ -1,0 +1,127 @@
+---
+title: "Design tokens"
+description: "Tasteful starter design systems for frontend projects"
+---
+
+# Design tokens
+
+Design tokens are the variables that define a UI's look — colors, type, spacing, motion. Picking them from a blank slate is a tax with low return. Pick a variant, copy the tokens, build on top.
+
+Tokens are the first design decision and the most consequential one. See [design first](/frontend/mindset/design-first) for why this comes before components.
+
+## Why use a starter variant
+
+<CardGroup cols={3}>
+  <Card title="Tasteful defaults" icon="palette">
+    Picking colors and spacing from scratch is a tax with low return. A variant gives you a coherent set in one move.
+  </Card>
+  <Card title="Anchored on real systems" icon="anchor">
+    Each variant inherits the constraints and decisions of a real, shipped design system. The taste is borrowed from work that already passed review.
+  </Card>
+  <Card title="Override, don't redo" icon="sliders">
+    Variants are starting points, not cages. Swap individual values without redoing the whole system.
+  </Card>
+</CardGroup>
+
+## The 5 variants
+
+| Variant | Best for | Personality | Default mode |
+|---|---|---|---|
+| [Radix](/frontend/design-tokens/radix) | Flexible base | Neutral, comprehensive | Light |
+| [Linear](/frontend/design-tokens/linear) | Tools / dashboards | Clean, slightly polished | Dark |
+| [Vercel](/frontend/design-tokens/vercel) | Technical products | Minimalist, sharp | Dark |
+| [Stripe](/frontend/design-tokens/stripe) | B2B / fintech | Confident, premium | Light |
+| [Tailwind](/frontend/design-tokens/tailwind) | Maximum flexibility | Generic, opinionated | Light |
+
+## How to pick
+
+- Pick **Radix** when you want comprehensive, accessible, neutral defaults you will customize.
+- Pick **Linear** when you are building a tool or dashboard and want crafted, focused defaults.
+- Pick **Vercel** when you are building a technical product, dev tool, or landing page and want sharp minimalism.
+- Pick **Stripe** when you are building B2B or fintech and want premium, confident defaults.
+- Pick **Tailwind** when you want maximum flexibility and Tailwind-CSS interop.
+
+<Tip>
+If you cannot decide between two, pick the one closer to the product you are building, not the one closer to your taste. Tokens carry a personality. Borrow the personality that matches the product.
+</Tip>
+
+## How tokens get used
+
+Tokens compile into CSS custom properties (`--color-bg`, `--space-md`, `--radius-md`, etc.) consumed by stylesheets and component libraries. They also live in JSON for build-time consumption — Style Dictionary, Tailwind config, design-tool sync, anything that reads structured data. Both forms ship in every variant.
+
+Components reference tokens, not raw values. A Button uses `var(--color-accent)`, never `#5b5fc7`. Raw values inside components is the first sign the token system has been bypassed.
+
+## Override patterns
+
+<AccordionGroup>
+  <Accordion title="Swap the accent color">
+    Override `--color-accent` (or whatever the variant calls it) at `:root`, leave everything else. The variant's neutrals, scales, and motion stay; only the highlight hue changes.
+
+    ```css
+    :root {
+      --color-accent-9: hsl(340, 75%, 55%); /* swap to a brand pink */
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="Tighten the type scale">
+    Override the type-scale tokens for a specific surface — a dense data table, an admin panel — and keep the variant base everywhere else. Local override beats global redesign.
+
+    ```css
+    .table-dense {
+      --font-size-md: 13px;
+      --line-height-md: 1.4;
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="Add a brand color">
+    Extend the variant's color tokens with new keys. Do not replace existing ones — additive change is safer than substitution, because every component already references the existing keys.
+
+    ```css
+    :root {
+      --color-brand-warm: hsl(28, 80%, 52%);
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## When to leave the variant behind
+
+A variant is a starting point. You leave it when the brand demands something the variant cannot express — a custom typeface, a color identity that cannot be reduced to one accent, a motion language that diverges from the variant's curves.
+
+Until then, the variant is doing the work of a thousand small decisions you do not have to make. Stay on it longer than you think you should.
+
+## All variants
+
+<CardGroup cols={3}>
+  <Card title="Radix" href="/frontend/design-tokens/radix">
+    Comprehensive, accessible, neutral.
+  </Card>
+  <Card title="Linear" href="/frontend/design-tokens/linear">
+    Clean tool / dashboard aesthetic.
+  </Card>
+  <Card title="Vercel" href="/frontend/design-tokens/vercel">
+    Sharp minimalist, technical.
+  </Card>
+  <Card title="Stripe" href="/frontend/design-tokens/stripe">
+    Premium B2B / fintech feel.
+  </Card>
+  <Card title="Tailwind" href="/frontend/design-tokens/tailwind">
+    Maximum flexibility.
+  </Card>
+</CardGroup>
+
+## Where to go next
+
+<CardGroup cols={3}>
+  <Card title="Design first" href="/frontend/mindset/design-first">
+    Why tokens come before components.
+  </Card>
+  <Card title="Polish" href="/frontend/mindset/polish">
+    The standard tokens enable.
+  </Card>
+  <Card title="New component" href="/frontend/workflows/new-component">
+    The workflow that consumes tokens.
+  </Card>
+</CardGroup>

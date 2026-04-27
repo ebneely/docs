@@ -1,10 +1,26 @@
 ---
 title: "Workflows"
-description: "(WIP) End-to-end flows for shipping UI"
+description: "End-to-end flows for shipping UI"
 ---
 
 # Workflows
 
-<Note>
-This page is a placeholder. Real content coming soon.
-</Note>
+A frontend workflow spans design tokens, component design, component implementation, polish review, and accessibility audit. Each step has an artifact; each artifact gates the next step. The flow scales with the project's [wave](/backend/workflow/waves) — lighter at W1, full at W3+ — but the order stays constant.
+
+## Pages
+
+<CardGroup cols={3}>
+  <Card title="New component" href="/frontend/workflows/new-component">
+    Ship a new component from token to merged code.
+  </Card>
+  <Card title="Design review" href="/frontend/workflows/design-review">
+    Polish and visual-correctness gate before ship.
+  </Card>
+  <Card title="Accessibility audit" href="/frontend/workflows/accessibility-audit">
+    Accessibility compliance check, paired with design review.
+  </Card>
+</CardGroup>
+
+## Where to start
+
+If this is your first frontend pass on a project, the entry point is [Design first](/frontend/mindset/design-first). It sets the mindset every workflow here assumes.

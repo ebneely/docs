@@ -1,10 +1,98 @@
 ---
 title: "Design first"
-description: "(WIP) Designs lead, code follows — why mockups precede implementation"
+description: "Designs lead, code follows"
 ---
 
 # Design first
 
+In frontend, code without design produces UI that is correct but not good. The design phase is non-skippable. Skipping it is the most reliable way to ship something competent and forgettable.
+
 <Note>
-This page is a placeholder. Real content coming soon.
+**Designs lead. Code follows. The two never overlap.**
 </Note>
+
+This is the frontend equivalent of the backend's [Stage 1 thinks, Stage 2 builds](/backend/workflow/mental-model) rule. Different artifact, same wall.
+
+## Why split design from implementation
+
+<CardGroup cols={2}>
+  <Card title="Design phase" icon="pen-ruler">
+    Spatial decisions, hierarchy, motion, polish.
+
+    Visual problems require visual thinking. Slow by nature. Wrong answers here cost weeks later.
+  </Card>
+  <Card title="Implementation phase" icon="code">
+    Turning the design into code that matches pixel-perfect.
+
+    Code execution. Fast by nature. Wrong answers here cost minutes — easy to revert.
+  </Card>
+</CardGroup>
+
+These are different shapes of work. Code execution can be fast and confident. Design needs slowness and iteration. Mixing them produces UI that is competent and unmemorable.
+
+## The high-fidelity mockup as the boundary
+
+The mockup is the document that says "design is done. Building can start." It is the single artifact that ends the design phase and starts the implementation phase.
+
+<Note>
+A mockup is complete enough that a developer building from it cannot ask "what should this look like?"
+</Note>
+
+If they have to ask, the mockup is not done. Send it back. Every visual decision — spacing, color, type, motion, hover state, empty state, error state — lives inside the mockup before code starts.
+
+Same idea as the backend [module manifest](/backend/workflow/module-manifest), different artifact. The manifest holds technical contracts; the mockup holds visual contracts.
+
+## What "design first" means in practice
+
+<Steps>
+  <Step title="Reference inspiration sites">
+    Before generating anything, decide what the work should look like. Pick references. Picking a [design tokens variant](/frontend/design-tokens/index) is the most concrete reference — it locks color, type, spacing, and motion in one move.
+  </Step>
+  <Step title="Pick design tokens">
+    Tokens come before components. You cannot design a Button without knowing which tokens it pulls from.
+  </Step>
+  <Step title="Generate the high-fidelity mockup">
+    Full screens, real content, every state. Not a wireframe, not a sketch. The mockup is the target the code mirrors.
+  </Step>
+  <Step title="Code mirrors the mockup pixel-perfect">
+    No interpretation. The implementation phase is not where visual decisions get made. If a question comes up, the answer is in the mockup or the mockup is incomplete.
+  </Step>
+</Steps>
+
+## The trap
+
+<Warning>
+Implementing while still designing. Visual-aware tools will happily generate code from vague descriptions — "a clean dashboard with charts," "a modern landing page." The result is competent-looking UI that does not match any specific vision.
+
+The fix is the same as the backend's spec rot: stop, return to the mockup, fix the mockup, regenerate the code. Do not patch the gap inside the implementation phase. That is how design rot starts.
+</Warning>
+
+## Where design tokens fit
+
+Tokens ARE the design at the lowest level — color, type, spacing, motion. Picking tokens is the first design decision and the most consequential one. Every component you generate later inherits the tokens you chose at the start.
+
+Pick the variant before designing the screen. See [Design tokens](/frontend/design-tokens/index) for the catalog and how to choose.
+
+## The wave overlay
+
+Design depth scales with [wave](/backend/workflow/waves), the same way backend planning depth does. At W1, the mockup covers the critical screens and core states. At W3, it covers every screen, every state, every responsive breakpoint, and every motion spec.
+
+Same rule, different intensity. The wall between design and implementation never moves.
+
+<Note>
+**TBD — Volta to verify:** whether Volta has a specific "design first" protocol with named phases (equivalent to RIPER for backend), or whether the principle is the protocol. The page describes the principle; specific phases are not invented.
+</Note>
+
+## Where to go next
+
+<CardGroup cols={3}>
+  <Card title="Design tokens" href="/frontend/design-tokens/index">
+    The variant catalog — pick before designing.
+  </Card>
+  <Card title="Component thinking" href="/frontend/mindset/components">
+    How to structure what you design.
+  </Card>
+  <Card title="Polish" href="/frontend/mindset/polish">
+    The standard everything aspires to.
+  </Card>
+</CardGroup>

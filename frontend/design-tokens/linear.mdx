@@ -1,0 +1,126 @@
+---
+title: "Linear-flavored"
+description: "Reference aesthetic anchored on Linear's app design"
+---
+
+<Note>
+This is a reference aesthetic, not concrete tokens. Each project derives its own values from this anchor using the prompts below. Treat the descriptions as a flavor brief, not a copy-paste source.
+</Note>
+
+## Overview
+
+Anchored on the visual language of [Linear's app](https://linear.app). The aesthetic is clean, focused, slightly polished — dark-default cool grays, a single restrained accent, deliberate motion, borders carrying elevation more than shadows.
+
+Use this variant when you are building a tool, dashboard, or productivity app. The variant rewards dense, information-rich UI with crafted defaults: tight type tracking on display sizes, near-invisible borders, motion that announces itself without showing off.
+
+## The aesthetic in detail
+
+- Dark-default — Linear ships dark first because tools are used at length. Cool grays read as calm under sustained attention.
+- Cool blue-shifted dark grays for backgrounds. Surfaces sit close in lightness, separated by subtle borders rather than gradients.
+- Single restrained accent (purple-leaning, sometimes blue), used only on selection, primary CTAs, and focus rings. Never decorative.
+- Inter sans with weighted hierarchy. Tight tracking on display sizes — large headings close the gaps Inter leaves at size.
+- Borders carry elevation, not shadows. Resting surfaces sit on the same plane separated by a 1px border. Shadows reserved for genuinely floating UI: popovers, modals.
+- Tight radius scale (4-8px). No large radii — soft corners read as consumer-friendly, the wrong register for tools.
+- Deliberate motion in the ~200ms range with ease-in-out. Reads as intentional rather than snappy.
+- Restraint in color use — a single accent at one saturation, no gradient hero treatments, no rainbow status colors.
+
+## Token categories covered
+
+Color (dark and light neutral palettes, single accent, status colors), typography (family, size, weight, line-height, letter-spacing with display and heading tracks), spacing, sizing (control heights, icon sizes), radius (tight scale), shadows (sparse — reserved for floating UI), motion (duration, easing).
+
+Linear emphasizes letter-spacing tracks and border-based elevation — the variant should preserve both.
+
+## Claude Design prompts
+
+### Setup prompt
+
+```
+You are setting up a frontend project anchored on Linear's aesthetic:
+
+- Dark-default. Cool blue-shifted dark grays for backgrounds and surfaces.
+- Single restrained accent (purple-leaning or blue), used on selection,
+  primary CTAs, and focus only.
+- Inter sans with weighted hierarchy. Display sizes use tight tracking
+  (around -0.02em); headings around -0.01em.
+- Borders carry elevation, not shadows. Resting surfaces use 1px borders.
+  Shadows only for popovers and modals.
+- Tight radius scale (4-8px). No larger radii.
+- Deliberate motion (~200ms range) with ease-in-out for state transitions.
+- Restraint in color: single accent at one saturation, no decorative use.
+
+Generate a complete tokens.json covering color (dark default plus light
+override, single accent, status colors), typography (with display and heading
+tracking tokens), spacing, sizing, radius, shadows (sparse), motion, and
+easing. Values should reflect the aesthetic above.
+
+Then output the same tokens as CSS custom properties on :root (dark by default,
+not wrapped in a media query) with a .theme-light class override. Set
+color-scheme: dark on :root.
+
+Add a base typography reset (h1 uses display tracking, h2-h4 use heading
+tracking) and a minimal CSS reset. No component styles. Output the full
+file contents.
+```
+
+### Component prompt
+
+```
+You are generating a [COMPONENT_TYPE] anchored on Linear's aesthetic:
+
+- Clean, focused, slightly polished. Dark-default cool grays.
+- Borders carry elevation, not shadows. Single restrained accent.
+- Inter sans with tight tracking on display sizes.
+- Tight radius (4-8px). Deliberate motion (~200ms) with ease-in-out.
+
+Use only token references (assume tokens like --color-bg, --color-surface,
+--color-border, --color-border-strong, --color-text, --color-text-muted,
+--color-accent, --space-*, --radius-*, --shadow-*, --duration-*, --easing-*,
+--tracking-display, --tracking-heading exist). No raw hex codes. No raw px
+values except where a token does not exist.
+
+Cover all states: default, hover, focus-visible, active, disabled, loading,
+error (where applicable), empty (where applicable). Resting surfaces use
+1px solid var(--color-border). Reserve box-shadow for floating UI only.
+Focus-visible uses a 2px outline of var(--color-accent) with 2px offset.
+Display-size text uses --tracking-display; headings use --tracking-heading.
+Transitions use --duration-medium with --easing-in-out.
+
+Output as HTML+CSS or React+CSS, single file.
+```
+
+### Review prompt
+
+```
+You are reviewing a UI component against Linear's aesthetic standards:
+
+- Border-not-shadow elevation: resting surfaces separated by 1px borders, not
+  shadows. Flag box-shadow on non-floating UI.
+- Single-accent discipline: accent on selection, primary CTA, and focus only.
+  Flag decorative accent use.
+- Type tracking: display sizes use display tracking, headings use heading
+  tracking. Flag default tracking on text larger than ~18px.
+- Motion timing: ~200ms standard. Flag anything outside 120-320ms without
+  reason.
+- Easing: ease-in-out for state transitions. Flag linear or default easing.
+- Radius restraint: 4-8px max. Flag radii above 8px on tool surfaces.
+- Spacing rhythm: all values pull from the spacing scale. Flag arbitrary
+  numbers.
+- State coverage: every interactive element defines default, hover,
+  focus-visible, active, disabled. Loading and error where applicable.
+- Color restraint: single accent at one saturation. Flag gradient hero
+  treatments or rainbow status arrays.
+
+List violations as: Block / Fix-First / Note. Each violation cites the
+dimension and the suggested fix.
+```
+
+## Other variants
+
+<CardGroup cols={3}>
+  <Card title="All variants" href="/frontend/design-tokens/index">Compare and pick.</Card>
+  <Card title="Radix" href="/frontend/design-tokens/radix">Comprehensive, neutral.</Card>
+  <Card title="Vercel" href="/frontend/design-tokens/vercel">Sharp minimalist.</Card>
+  <Card title="Stripe" href="/frontend/design-tokens/stripe">Premium B2B / fintech.</Card>
+  <Card title="Tailwind" href="/frontend/design-tokens/tailwind">Maximum flexibility.</Card>
+  <Card title="Polish" href="/frontend/mindset/polish">The standard tokens enable.</Card>
+</CardGroup>

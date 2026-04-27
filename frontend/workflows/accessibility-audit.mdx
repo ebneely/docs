@@ -1,10 +1,100 @@
 ---
 title: "Accessibility audit"
-description: "(WIP) Checking compliance with WCAG and platform accessibility standards"
+description: "Check compliance with WCAG and platform accessibility standards"
 ---
 
 # Accessibility audit
 
+Accessibility audit runs alongside [Design review](/frontend/workflows/design-review). They are parallel checks, both required pre-ship — design review catches polish failures, the audit catches access failures. Neither is optional.
+
+For the philosophical anchor, see [Accessibility](/frontend/mindset/accessibility). The audit is the mechanism; the mindset is the reason.
+
+## When to use
+
+- Before any component ships, paired with design review.
+- During a [wave bump](/backend/workflows/wave-bump) — every component re-audited at the new wave's depth.
+- After a relevant accessibility regulation change. Rare, but real.
+
+## The audit checklist
+
+<AccordionGroup>
+  <Accordion title="Keyboard">
+    Every interactive element reachable via Tab. Focus visible at every step. Escape closes overlays. Enter activates focused buttons. Arrow keys navigate menus where applicable. A user without a mouse should be able to do everything a user with one can do.
+  </Accordion>
+
+  <Accordion title="Screen reader">
+    Semantic HTML — button vs div, nav vs div, main vs div. ARIA labels where the visual context isn't enough. Live regions for async-updated content. Decorative images marked as such. Form fields paired with labels.
+  </Accordion>
+
+  <Accordion title="Color contrast">
+    WCAG AA minimum for body text (4.5:1). AA for large text (3:1). AAA where text is small or critical to the user's task. Contrast must be measured against the actual background, including any overlays or gradients.
+  </Accordion>
+
+  <Accordion title="Focus management">
+    Modals trap focus and restore it on close. Route changes restore focus to a meaningful element. Dynamic content announces itself. Focus must never disappear or jump unpredictably.
+  </Accordion>
+
+  <Accordion title="State indicators">
+    Never color-only. Errors have icons plus color plus text. Disabled states have visible reduced contrast and an accessible name change, not just a class. A user who can't perceive color should still understand every state.
+  </Accordion>
+</AccordionGroup>
+
+## Wave-aware audit depth
+
+<Tabs>
+  <Tab title="W1 — MVP">
+    Keyboard, contrast, and semantic HTML. The must-haves. If any of these fail, fix before shipping. Audit is a manual checklist run.
+  </Tab>
+
+  <Tab title="W2 — Early Growth">
+    W1 plus screen-reader testing on the critical paths — auth, account, payment, anything that gates the user's ability to use the product. Audit adds a screen-reader spot-check to the manual checklist.
+  </Tab>
+
+  <Tab title="W3 — Scale">
+    Full WCAG AA compliance, audited with tooling on every component. Manual screen-reader testing on critical paths plus regression testing of any flow that changed. Findings tracked as artifacts alongside the component's manifest.
+  </Tab>
+
+  <Tab title="W4 — Hyper-scale">
+    W3 plus AAA where applicable. Regular audit cadence rather than per-component. Compliance-framework alignment checked per component (WCAG, ADA, EAA, regional standards as relevant).
+  </Tab>
+</Tabs>
+
+The audit shape stays the same across waves. What changes is the depth and the cadence. See [Waves](/backend/workflow/waves).
+
+## Tools
+
+Audits combine manual checks with automated scanning. Neither is sufficient alone.
+
+- **Manual** — keyboard navigation walkthrough end-to-end. Screen-reader spot-check on at least one screen reader (NVDA, JAWS, VoiceOver, or TalkBack depending on platform). Visual contrast check on actual rendered output.
+- **Automated** — accessibility scanners run during CI or local dev. Catch the regressions humans miss; never catch the things humans do.
+
 <Note>
-This page is a placeholder. Real content coming soon.
+**TBD — Volta to verify:** which automated tools Volta uses (axe-core? Lighthouse? Pa11y? IBM Equal Access? a custom rig?), the screen reader spot-check protocol, and whether audits are gated in CI or run as a manual checklist alongside design review.
 </Note>
+
+## The verdict
+
+Findings come back in four bands.
+
+| Band | Meaning |
+| ---- | ------- |
+| Critical | Blocks ship. The component is unusable for some users. |
+| High | Should fix before ship. The component is usable but degraded. |
+| Medium | Track and fix in the next iteration. |
+| Note | Worth recording, not blocking. |
+
+Critical findings are non-negotiable — they don't trade off against schedule. For what to do at each band, see [Decision trees](/frontend/decisions/index).
+
+## Where to go next
+
+<CardGroup cols={3}>
+  <Card title="Accessibility" href="/frontend/mindset/accessibility">
+    The philosophical anchor.
+  </Card>
+  <Card title="Design review" href="/frontend/workflows/design-review">
+    The parallel pre-ship gate.
+  </Card>
+  <Card title="New component" href="/frontend/workflows/new-component">
+    The workflow that invokes this audit.
+  </Card>
+</CardGroup>

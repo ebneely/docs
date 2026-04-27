@@ -1,10 +1,91 @@
 ---
 title: "Polish"
-description: "(WIP) The level of detail that separates pro UI from amateur UI"
+description: "The level of detail that separates pro UI from amateur UI"
 ---
 
 # Polish
 
+Polish is not a phase you add at the end. It is a standard you apply throughout. The first version should already aspire to the polish target; "polishing later" usually means never.
+
 <Note>
-This page is a placeholder. Real content coming soon.
+**Polish is a standard, not a stage.** The first commit holds the polish bar the final commit holds.
 </Note>
+
+The reason is mechanical: once a UI ships at "good enough," every subsequent change is measured against "good enough." The bar resets. Raising it later means redoing the work you already shipped.
+
+## The polish dimensions
+
+<AccordionGroup>
+  <Accordion title="Spacing rhythm">
+    A consistent base unit (4px, 8px, or whatever the tokens specify) respected throughout. Visible scale, not arbitrary numbers. When spacing values are 7, 13, 18, 22 — there is no rhythm. When they are 8, 16, 24, 32 — the eye reads order even before the user names it.
+  </Accordion>
+
+  <Accordion title="Alignment">
+    Visual alignment, not just CSS alignment. Things that look like they line up actually line up. Optical adjustment matters more than algorithmic — a perfectly centered icon often needs a 1px nudge to feel centered, because shape, not bounding box, drives perception.
+  </Accordion>
+
+  <Accordion title="Type hierarchy">
+    A clear scale of sizes and weights, not nine different font sizes scattered randomly. Two or three weights, three or four sizes, well-paired. Hierarchy reads at a glance when the scale is small; it disappears when every heading is its own size.
+  </Accordion>
+
+  <Accordion title="Motion timing">
+    Micro-interactions feel right around 150 to 250ms for most transitions. Anything faster is invisible; anything slower feels sluggish. Motion has a purpose — confirming state, drawing attention, masking latency — not decoration.
+  </Accordion>
+
+  <Accordion title="Easing curves">
+    Linear easing is the rookie tell. Real polish uses ease-out for entrances (things arrive softly), ease-in for exits (things accelerate away), ease-in-out for state transitions (smooth on both sides). Linear says "I used the default."
+  </Accordion>
+
+  <Accordion title="State coverage">
+    Hover, focus, active, disabled, loading, error — all designed. Not afterthoughts. Most amateur UIs cover the default state and 60% of hover, then ship. The other states leak through later as bugs.
+  </Accordion>
+
+  <Accordion title="Empty states">
+    What does the UI look like with zero data? With one item? With a thousand? Polish covers this; amateur work shows a blank screen and calls it done. The empty state is often the first state a user sees.
+  </Accordion>
+</AccordionGroup>
+
+## The polish review
+
+Read the UI like a critical reviewer. Where does the eye stop? Where does it stutter? What feels off but you cannot articulate why? That last question is the most useful one — the inarticulate "off" is almost always a polish dimension you have not named yet.
+
+Walking through every dimension above, on every screen, is the work. See [Design review](/frontend/workflows/design-review) for the structured pass.
+
+## The temptation
+
+<Warning>
+Shipping at "good enough." Polish is the difference between something that works and something that feels right. Users do not articulate the difference but they feel it — and they remember it.
+
+The cost of polish at the start is small. The cost of polish retrofitted is enormous, because every subsequent change has to respect the lower bar you already set.
+</Warning>
+
+## Polish across waves
+
+Polish target generally stays constant across [waves](/backend/workflow/waves). Pro UI is pro UI — a W1 MVP should not look like a W1 MVP, it should look like a finished product at W1's scope.
+
+What scales is the breadth of polish:
+
+- **W1** — every shipped screen polished, but the screen count is small.
+- **W2** — every shipped screen polished, plus all variants (loading, empty, error) on the critical paths.
+- **W3** — full state coverage everywhere, motion specs documented per component, polish bar enforced in review.
+- **W4** — polish becomes a discipline with its own audit cadence and consistency checks across the whole surface.
+
+The bar does not move down for early waves. The surface area grows as the wave grows.
+
+<Note>
+**TBD — Volta to verify:** Volta's specific polish target — Linear-level? Apple-level? indie-craft? — and motion/easing preferences. The values above (around 150 to 250ms) are industry-typical; Volta's house style may differ.
+</Note>
+
+## Where to go next
+
+<CardGroup cols={3}>
+  <Card title="Design tokens" href="/frontend/design-tokens/index">
+    Where polish constants live.
+  </Card>
+  <Card title="Design review" href="/frontend/workflows/design-review">
+    How polish gets enforced.
+  </Card>
+  <Card title="Component thinking" href="/frontend/mindset/components">
+    What gets polished.
+  </Card>
+</CardGroup>

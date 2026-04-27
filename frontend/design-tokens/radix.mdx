@@ -1,0 +1,118 @@
+---
+title: "Radix-flavored"
+description: "Reference aesthetic anchored on Radix Colors and Radix UI"
+---
+
+<Note>
+This is a reference aesthetic, not concrete tokens. Each project derives its own values from this anchor using the prompts below. Treat the descriptions as a flavor brief, not a copy-paste source.
+</Note>
+
+## Overview
+
+Anchored on [Radix Colors](https://www.radix-ui.com/colors) and the conventions used by Radix UI primitives. The aesthetic is comprehensive, accessible, and slightly cool — twelve-step scales per hue, AAA contrast targeting on body text, single-accent restraint.
+
+Use this variant when you want a flexible base you will customize over time. The comprehensive scales give you fine-grained control without inventing tones, and the system was built for both light and dark from day one.
+
+## The aesthetic in detail
+
+- Comprehensive color scales — twelve steps per hue with conventional roles (1-2 backgrounds, 3-5 surfaces, 6-8 borders and disabled, 9-10 solid fills, 11-12 text).
+- Cool-leaning neutral grays — slate or mauve as the base. Reads professional without feeling sterile.
+- Single accent hue convention — Indigo, Violet, Iris, Blue, Cyan all ship with the same step structure. Pick one, never mix.
+- Inter or system-ui sans pairing with a measured weight scale (regular, medium, semibold, bold).
+- 4px spacing base unit, conventional scale up to ~64px. No arbitrary intermediate values.
+- Tight radius scale (4-12px range). No oversized radii.
+- Subtle motion in the ~150ms range, ease-out for entrances, ease-in for exits.
+- Layered subtle shadow scale (six steps) — resting cards through modal scrim.
+- AAA contrast targeting on body text against backgrounds. Accessibility is a default, not an audit.
+
+## Token categories covered
+
+Color (twelve-step scales per hue, plus semantic aliases), typography (family, size, weight, line-height, letter-spacing), spacing, sizing (control heights, icon sizes), radius, shadows (six-step elevation), motion (duration, easing).
+
+Radix is comprehensive — full twelve-step color scales per hue is its signature, and the variant should preserve that depth.
+
+## Claude Design prompts
+
+### Setup prompt
+
+```
+You are setting up a frontend project anchored on Radix's aesthetic:
+
+- Comprehensive color scales: twelve steps per hue (1-2 backgrounds, 3-5 surfaces,
+  6-8 borders and disabled, 9-10 solid fills, 11-12 text).
+- Cool-leaning neutral grays (slate or mauve as the base).
+- Single accent hue convention (Indigo, Violet, Iris, Blue, or Cyan).
+- Inter or system-ui sans with measured weight scale.
+- 4px spacing base, conventional scale up to ~64px.
+- Tight radius scale (4-12px).
+- Subtle motion (~150ms range), ease-out entrances, ease-in exits.
+- Layered subtle shadow scale, six steps.
+- AAA contrast on body text.
+
+Generate a complete tokens.json covering color (twelve-step neutral and accent
+scales plus semantic aliases), typography, spacing, sizing, radius, shadows,
+motion, and easing. Specific values should reflect the aesthetic above.
+
+Then output the same tokens as CSS custom properties on :root with a
+[data-theme="dark"] override. Keep the raw scale variables shared between
+modes; flip semantic aliases only.
+
+Add a base typography reset and a minimal CSS reset. No component styles.
+Output the full file contents.
+```
+
+### Component prompt
+
+```
+You are generating a [COMPONENT_TYPE] anchored on Radix's aesthetic:
+
+- Comprehensive twelve-step color scales, single accent hue, cool neutrals.
+- Inter or system-ui sans with measured weight scale.
+- 4px spacing rhythm. Tight radius (4-12px). Subtle motion (~150ms).
+- Layered shadows for elevation. AAA contrast on body text.
+
+Use only token references (assume tokens like --color-bg, --color-surface,
+--color-border, --color-text, --color-text-muted, --color-accent, --space-*,
+--radius-*, --shadow-*, --duration-*, --easing-* exist). No raw hex codes.
+No raw px values except where a token does not exist.
+
+Cover all states: default, hover, focus-visible, active, disabled, loading,
+error (where applicable), empty (where applicable). Focus-visible uses a 2px
+outline of var(--color-accent) with 2px offset. Hover shifts via a matching
+hover token. Transitions use --duration-medium with --easing-out.
+
+Output as HTML+CSS or React+CSS, single file.
+```
+
+### Review prompt
+
+```
+You are reviewing a UI component against Radix's aesthetic standards:
+
+- Twelve-step color usage: surfaces 1-3, borders 6-8, text 11-12. Flag mid-step
+  jumps with no intermediate step.
+- 4px spacing rhythm. Flag arbitrary numbers (7px, 13px, 22px).
+- Type hierarchy: Inter only, two or three weights, three or four sizes max
+  per surface.
+- State coverage: every interactive element defines default, hover,
+  focus-visible, active, disabled. Loading and error where applicable.
+- Motion: ~150ms standard. Flag anything outside 100-300ms without reason.
+- Easing: ease-out for entrances, ease-in for exits, ease-in-out for state
+  changes. Flag linear easing.
+- Color: single accent only, no decorative use. Flag rainbow palettes.
+- Accessibility: AAA contrast on body text, 2px focus ring on every focusable.
+
+List violations as: Block / Fix-First / Note. Each violation cites the
+dimension and the suggested fix.
+```
+
+## Other variants
+
+<CardGroup cols={3}>
+  <Card title="All variants" href="/frontend/design-tokens/index">Compare and pick.</Card>
+  <Card title="Linear" href="/frontend/design-tokens/linear">Tool / dashboard aesthetic.</Card>
+  <Card title="Vercel" href="/frontend/design-tokens/vercel">Sharp minimalist.</Card>
+  <Card title="Stripe" href="/frontend/design-tokens/stripe">Premium B2B / fintech.</Card>
+  <Card title="Tailwind" href="/frontend/design-tokens/tailwind">Maximum flexibility.</Card>
+  <Card title="Polish" href="/frontend/mindset/polish">The standard tokens enable.</Card>
+</CardGroup>

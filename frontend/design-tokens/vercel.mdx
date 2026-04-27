@@ -1,0 +1,280 @@
+---
+title: "Vercel-flavored tokens"
+description: "Minimalist, sharp, high contrast, dark-default"
+---
+
+# Vercel-flavored tokens
+
+<Note>
+This is a starter variant. Tweak before using on a real project — the values reflect the source design system's defaults, not your specific needs.
+</Note>
+
+## Overview
+
+Modeled on Vercel's product surfaces — the dashboard, marketing site, and dev tools. The aesthetic is minimalist, sharp, and high-contrast, with dark as the default mode. Use this variant when the product is technical, the audience is developer-shaped, and the surface should feel precise rather than friendly.
+
+## Tokens (JSON)
+
+```json
+{
+  "color": {
+    "bg":      { "base": "hsl(0,0%,0%)", "subtle": "hsl(0,0%,4%)", "muted": "hsl(0,0%,7%)" },
+    "surface": { "base": "hsl(0,0%,4%)", "raised": "hsl(0,0%,7%)", "overlay": "hsl(0,0%,10%)" },
+    "border":  { "subtle": "hsl(0,0%,16%)", "default": "hsl(0,0%,20%)", "strong": "hsl(0,0%,28%)" },
+    "text":    { "high": "hsl(0,0%,100%)", "default": "hsl(0,0%,95%)", "muted": "hsl(0,0%,65%)", "subtle": "hsl(0,0%,45%)" },
+    "accent":  { "primary": "hsl(212,100%,50%)", "primary-hover": "hsl(212,100%,56%)", "primary-text": "hsl(0,0%,100%)" },
+    "status":  { "success": "hsl(140,60%,45%)", "warning": "hsl(40,90%,55%)", "error": "hsl(358,75%,59%)" }
+  },
+  "typography": {
+    "family": { "sans": "Geist, Inter, system-ui, sans-serif", "mono": "Geist Mono, JetBrains Mono, ui-monospace, monospace" },
+    "size":   { "xs": "12px", "sm": "13px", "base": "14px", "md": "16px", "lg": "18px", "xl": "24px", "2xl": "32px", "3xl": "48px" },
+    "weight": { "regular": 400, "medium": 500, "semibold": 600, "bold": 700 },
+    "leading":{ "tight": 1.2, "default": 1.5, "loose": 1.7 },
+    "tracking":{ "tight": "-0.02em", "default": "0", "wide": "0.04em" }
+  },
+  "spacing": { "0": "0", "1": "4px", "2": "8px", "3": "12px", "4": "16px", "6": "24px", "8": "32px", "12": "48px", "16": "64px" },
+  "sizing":  { "control-sm": "28px", "control-md": "32px", "control-lg": "40px", "container": "1200px" },
+  "radius":  { "sm": "4px", "md": "6px", "lg": "8px", "full": "9999px" },
+  "shadow":  { "none": "none", "subtle": "0 0 0 1px hsl(0,0%,16%)", "raised": "0 0 0 1px hsl(0,0%,20%)", "focus": "0 0 0 2px hsl(212,100%,50%)" },
+  "motion":  { "fast": "100ms", "medium": "150ms", "slow": "220ms" },
+  "easing":  { "out": "cubic-bezier(0.16, 1, 0.3, 1)", "in": "cubic-bezier(0.7, 0, 0.84, 0)", "in-out": "cubic-bezier(0.65, 0, 0.35, 1)" }
+}
+```
+
+## Tokens (CSS)
+
+```css
+:root {
+  --color-bg-base: hsl(0,0%,0%);
+  --color-bg-subtle: hsl(0,0%,4%);
+  --color-bg-muted: hsl(0,0%,7%);
+  --color-surface-base: hsl(0,0%,4%);
+  --color-surface-raised: hsl(0,0%,7%);
+  --color-surface-overlay: hsl(0,0%,10%);
+  --color-border-subtle: hsl(0,0%,16%);
+  --color-border-default: hsl(0,0%,20%);
+  --color-border-strong: hsl(0,0%,28%);
+  --color-text-high: hsl(0,0%,100%);
+  --color-text-default: hsl(0,0%,95%);
+  --color-text-muted: hsl(0,0%,65%);
+  --color-text-subtle: hsl(0,0%,45%);
+  --color-accent-primary: hsl(212,100%,50%);
+  --color-accent-primary-hover: hsl(212,100%,56%);
+  --color-success: hsl(140,60%,45%);
+  --color-warning: hsl(40,90%,55%);
+  --color-error: hsl(358,75%,59%);
+
+  --font-sans: Geist, Inter, system-ui, sans-serif;
+  --font-mono: Geist Mono, JetBrains Mono, ui-monospace, monospace;
+
+  --text-xs: 12px;  --text-sm: 13px;  --text-base: 14px; --text-md: 16px;
+  --text-lg: 18px;  --text-xl: 24px;  --text-2xl: 32px;  --text-3xl: 48px;
+
+  --space-1: 4px;  --space-2: 8px;  --space-3: 12px; --space-4: 16px;
+  --space-6: 24px; --space-8: 32px; --space-12: 48px; --space-16: 64px;
+
+  --radius-sm: 4px; --radius-md: 6px; --radius-lg: 8px; --radius-full: 9999px;
+
+  --shadow-subtle: 0 0 0 1px hsl(0,0%,16%);
+  --shadow-raised: 0 0 0 1px hsl(0,0%,20%);
+  --shadow-focus:  0 0 0 2px hsl(212,100%,50%);
+
+  --motion-fast: 100ms; --motion-medium: 150ms; --motion-slow: 220ms;
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in:     cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+[data-theme="light"] {
+  --color-bg-base: hsl(0,0%,100%);
+  --color-bg-subtle: hsl(0,0%,98%);
+  --color-surface-base: hsl(0,0%,100%);
+  --color-surface-raised: hsl(0,0%,98%);
+  --color-border-subtle: hsl(0,0%,92%);
+  --color-border-default: hsl(0,0%,88%);
+  --color-text-high: hsl(0,0%,0%);
+  --color-text-default: hsl(0,0%,9%);
+  --color-text-muted: hsl(0,0%,35%);
+}
+```
+
+## Motion + easing detail
+
+Vercel motion is snappy. Most transitions land in 100 to 150ms. Slower than that reads sluggish on a high-density technical surface.
+
+```css
+.transition-color { transition: color var(--motion-fast) var(--ease-out); }
+.transition-bg    { transition: background-color var(--motion-medium) var(--ease-out); }
+.transition-modal { transition: transform var(--motion-slow) var(--ease-in-out), opacity var(--motion-slow) var(--ease-out); }
+```
+
+Defaults: `--ease-out` for hover, focus, entrances. `--ease-in` only for exits. `--ease-in-out` for state transitions where both directions need symmetry.
+
+<Note>
+**TBD — Volta to verify:** exact Vercel easing curves. Values above are common "sharp out" curves; Vercel's published Geist UI uses similar but not identical curves.
+</Note>
+
+## Why these values
+
+- **Pure-or-near-pure black anchors the contrast.** 0% lightness backgrounds with 16 to 28% borders. Every color sits on an extreme.
+- **Borders, not shadows, create elevation.** The `--shadow-*` tokens encode 1px borders. Real drop shadows only on modals.
+- **Snappy motion suits dev tools.** 100 to 150ms feels responsive without feeling jumpy.
+- **Mono pairing is non-decorative.** Geist Mono renders code, terminal output, and ID-shaped values. It signals "this is literal".
+- **Tight radii reinforce the geometric tone.** 4 / 6 / 8px maxes out. Larger radii soften the surface and break the aesthetic.
+- **Single accent blue, used sparingly.** One strong blue for primary action and focus. Multi-hue palettes belong in a different variant.
+
+## Claude Design prompts
+
+### Setup prompt
+
+```
+You are setting up design tokens for a new project using the Vercel-flavored variant.
+
+Implement the tokens from /frontend/design-tokens/vercel as CSS custom properties on :root.
+Default mode is dark. Provide a [data-theme="light"] override flipping background, surface, border, and text scales.
+
+Type stack: Geist (or Inter fallback) for sans, Geist Mono (or JetBrains Mono fallback) for mono.
+Pair the mono family on every code surface, terminal-style output, and any monospace ID display.
+
+Elevation rule: borders create elevation, not shadows. Use --shadow-subtle and --shadow-raised (1px borders) for cards, panels, inputs. Reserve real drop shadows for modal and popover layers only.
+
+Radius scale tops out at 8px. Do not introduce larger radii.
+
+Motion rule: 100 to 150ms for almost everything, ease-out by default. Slower than 220ms only for modal transitions.
+
+Confirm the tokens are wired before generating any component.
+```
+
+### Component prompt
+
+```
+Generate a [COMPONENT_NAME] component using the Vercel-flavored token set.
+
+Aesthetic: minimalist, sharp, high contrast. Dark default. Borders for elevation, not shadows.
+
+Use only token references (--color-*, --space-*, --radius-*, --motion-*, --ease-*). No hard-coded colors or spacing values.
+
+Produce all states: default, hover, focus-visible (using --shadow-focus), active, disabled, loading if applicable, error if applicable.
+
+Constraints:
+- Radius from {--radius-sm, --radius-md, --radius-lg} only.
+- Motion from {--motion-fast, --motion-medium} for interaction feedback. --motion-slow only for layered surfaces.
+- Single accent color for primary action. Status colors only for status communication.
+- Type sizes from the defined scale. No one-off pixel values.
+
+Return the component as HTML+CSS or React+CSS. Inline styles or a single colocated <style> block.
+```
+
+### Polish review prompt
+
+```
+Review this component against the Vercel-flavored polish bar. Walk every dimension and flag anything below standard.
+
+1. Timing - is interaction feedback in the 100 to 150ms range with ease-out?
+2. Contrast - do text-on-surface pairs hit AA minimum, AAA on body text?
+3. Elevation - is elevation done with borders, not shadows? Drop shadows only on modal-layer surfaces.
+4. Radius - every corner from {4px, 6px, 8px}? Larger violates the aesthetic.
+5. Geometric accents - accent colors used sparingly on action and focus only?
+6. Mono pairing - any code, ID, or terminal content rendered in --font-mono?
+7. State coverage - every interactive element has hover, focus-visible, active, disabled?
+8. Spacing rhythm - every gap from the 4px-base scale? 7px, 13px, 22px are bugs.
+
+For each violation return the offending CSS line and the corrected line.
+```
+
+## Sample component
+
+A command-palette item — Vercel-shaped surface with mono shortcut, accent on focus, sharp borders.
+
+```html
+<button class="cmd-item" type="button">
+  <span class="cmd-label">Open project</span>
+  <kbd class="cmd-shortcut">P</kbd>
+</button>
+
+<style>
+.cmd-item {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-surface-base);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  color: var(--color-text-default);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition:
+    background-color var(--motion-fast) var(--ease-out),
+    border-color var(--motion-fast) var(--ease-out),
+    color var(--motion-fast) var(--ease-out);
+}
+.cmd-item:hover { background: var(--color-surface-raised); color: var(--color-text-high); }
+.cmd-item:focus-visible { outline: none; border-color: var(--color-accent-primary); box-shadow: var(--shadow-focus); }
+.cmd-item:active { background: var(--color-surface-overlay); }
+.cmd-item:disabled { color: var(--color-text-subtle); cursor: not-allowed; }
+
+.cmd-shortcut {
+  display: inline-flex; align-items: center;
+  height: 20px;
+  padding: 0 var(--space-2);
+  background: var(--color-bg-muted);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
+</style>
+```
+
+## Override examples
+
+Soften for a non-dev product:
+
+```css
+/* before */ --color-bg-base: hsl(0,0%,0%);  --color-border-subtle: hsl(0,0%,16%);
+/* after  */ --color-bg-base: hsl(0,0%,6%);  --color-border-subtle: hsl(0,0%,22%);
+```
+
+Switch the accent off blue:
+
+```css
+/* before */ --color-accent-primary: hsl(212,100%,50%);
+/* after  */ --color-accent-primary: hsl(265,85%,60%);
+```
+
+Drop the mono pairing for a non-technical surface:
+
+```css
+/* before */ --font-mono: Geist Mono, JetBrains Mono, ui-monospace, monospace;
+/* after  */ --font-mono: var(--font-sans);
+```
+
+<Note>
+**TBD — Volta to verify:** whether to ship Geist (Vercel's actual font, freely available) or Inter (broader fallback). Both render well; Geist is the closer match.
+</Note>
+
+<Note>
+**TBD — Volta to verify:** whether the accent should be the Vercel-blue above or a more neutral blue/black for a stricter monochrome palette.
+</Note>
+
+## Other variants
+
+<CardGroup cols={3}>
+  <Card title="Variant catalog" href="/frontend/design-tokens/index">
+    All variants and how to choose.
+  </Card>
+  <Card title="Radix" href="/frontend/design-tokens/radix">
+    Accessible defaults, neutral tone.
+  </Card>
+  <Card title="Linear" href="/frontend/design-tokens/linear">
+    Dense, fast, dark-leaning product UI.
+  </Card>
+  <Card title="Stripe" href="/frontend/design-tokens/stripe">
+    Confident, premium, light-default.
+  </Card>
+  <Card title="Tailwind" href="/frontend/design-tokens/tailwind">
+    Opinionated defaults, maximum flexibility.
+  </Card>
+</CardGroup>

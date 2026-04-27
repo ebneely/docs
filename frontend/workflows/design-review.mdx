@@ -1,10 +1,119 @@
 ---
 title: "Design review"
-description: "(WIP) Polish and visual-correctness review before shipping a UI"
+description: "Polish and visual-correctness review before shipping"
 ---
 
 # Design review
 
+Design review is the last gate before shipping a component. It catches polish failures that "looks fine on my screen" missed. Like [/backend/workflows/security-review](/backend/workflows/security-review), depth scales with the project's [wave](/backend/workflow/waves) — a checklist at W1, a structured walk at W2, a full pass with formal artifacts at W3+.
+
+The driver is a Claude Design conversation (or your visual-aware tool of choice). The review itself stays the same in shape across waves; what it produces changes.
+
+## When to use
+
+- After code is generated for a new or refactored component.
+- Before any component lands in main.
+- During a polish push across an existing surface.
+
+For the philosophical anchor, see [Polish](/frontend/mindset/polish). For the workflow that invokes this review, see [New component](/frontend/workflows/new-component).
+
+## The review checklist
+
+<AccordionGroup>
+  <Accordion title="Spacing rhythm">
+    A consistent base unit (4px, 8px, or whichever the variant defines) respected across the component. No one-off margins, no arbitrary gaps. Spacing should read as a pattern, not a sequence of decisions.
+  </Accordion>
+
+  <Accordion title="Alignment">
+    Visual alignment, not just CSS alignment. Optical adjustments where needed — icons next to text, baselines across mixed type sizes, edges that look aligned to the eye even when pixel math disagrees.
+  </Accordion>
+
+  <Accordion title="Type hierarchy">
+    Clear, scaled, intentional. A reader should know which text is primary, which is secondary, which is metadata, without thinking. Not arbitrary mixed sizes — every level traces back to a token.
+  </Accordion>
+
+  <Accordion title="State coverage">
+    Default, hover, focus, active, disabled, loading, error, and empty all present. Missing states are the most common polish failure — they look fine until a real user hits them.
+  </Accordion>
+
+  <Accordion title="Motion timing">
+    Transitions have purpose. Durations match the variant's motion scale. Nothing animates for decoration; every transition serves a state change or a feedback loop.
+  </Accordion>
+
+  <Accordion title="Easing curves">
+    Non-linear. Ease-out for entrances (the element settles in). Ease-in for exits (the element pulls away). Linear easing reads as mechanical and is almost always wrong.
+  </Accordion>
+
+  <Accordion title="Color usage">
+    Tokens only — CSS custom properties or the variant's defined palette. No raw hex codes, no arbitrary RGBA, no color picked from a screenshot. If a color is needed and no token covers it, the token set is incomplete.
+  </Accordion>
+
+  <Accordion title="Empty states">
+    Explicit empty-state design exists for any data-driven component. A blank box is not an empty state — it's a missing one. Empty states should set expectations for what fills the space.
+  </Accordion>
+</AccordionGroup>
+
+## The review prompt
+
+Run this in Claude Design (or your visual-aware tool) once a component is implemented. Paste your variant's tokens where the placeholder indicates.
+
+```
+You are a design reviewer.
+
+Tokens for this variant:
+[paste variant token set here - colors, spacing, type scale, motion, easing]
+
+Component under review:
+[paste component or attach screenshots covering every state]
+
+Review the component against these eight dimensions in order:
+1. Spacing rhythm - consistent base unit, no one-off margins.
+2. Alignment - visual alignment including optical adjustments.
+3. Type hierarchy - clear, scaled, every level tied to a token.
+4. State coverage - default, hover, focus, active, disabled, loading, error, empty.
+5. Motion timing - durations match the variant's motion scale.
+6. Easing curves - ease-out for entrances, ease-in for exits, no linear.
+7. Color usage - tokens only, no raw hex or arbitrary RGBA.
+8. Empty states - explicit design for any data-driven surface.
+
+For each dimension, return findings categorized as:
+- Block: must fix before ship.
+- Fix-First: should fix before ship.
+- Note: worth tracking, not blocking.
+
+STOP after findings. Do not modify code.
+```
+
 <Note>
-This page is a placeholder. Real content coming soon.
+**TBD — Volta to verify:** the exact review prompt wording. The version above is a generic walk-the-checklist prompt. Volta's real prompt probably includes the variant-specific token reference and may use a different findings rubric.
 </Note>
+
+<Note>
+**TBD — Volta to verify:** whether design review uses a dedicated slash command (e.g. /design.review) or is a freeform Claude Design conversation.
+</Note>
+
+## The verdict
+
+Findings come back in three bands.
+
+| Band | Meaning |
+| ---- | ------- |
+| Pass | No Block findings. Fix-First and Note items get queued, the component ships. |
+| Fix-first | One or more Fix-First items. Address them, re-run the review, then ship. |
+| Return-to-design | One or more Block items. Iterate the mockup, regenerate code, re-run the review. |
+
+For what to do at each verdict, see [Decision trees](/frontend/decisions/index).
+
+## Where to go next
+
+<CardGroup cols={3}>
+  <Card title="Polish" href="/frontend/mindset/polish">
+    The standard the review enforces.
+  </Card>
+  <Card title="Accessibility audit" href="/frontend/workflows/accessibility-audit">
+    The parallel pre-ship review.
+  </Card>
+  <Card title="New component" href="/frontend/workflows/new-component">
+    The workflow that invokes this review.
+  </Card>
+</CardGroup>

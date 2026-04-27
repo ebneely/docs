@@ -1,0 +1,121 @@
+---
+title: "Stripe-flavored"
+description: "Reference aesthetic anchored on Stripe"
+---
+
+<Note>
+This is a reference aesthetic, not concrete tokens. Each project derives its own values from this anchor using the prompts below. Treat the descriptions as a flavor brief, not a copy-paste source.
+</Note>
+
+## Overview
+
+Anchored on Stripe's product and marketing surfaces. The aesthetic is confident, premium, and slightly warm, with light as the default mode. Use this when the product needs to feel trustworthy and high-end — fintech, payments, B2B SaaS, premium tools, or any surface where users hand over real consequence.
+
+## The aesthetic in detail
+
+- Light-default surfaces with rich purples and blues — the "blurple" lineage Stripe is known for, used for action and brand voice.
+- Warm neutral grays — slightly off-white backgrounds, near-black foreground that feels less harsh than pure black.
+- Refined sans family (Söhne-style) for product surfaces, with optional serif for marketing and editorial weight on headings.
+- Generous spacing — surfaces breathe, container padding lands on the larger end, scale runs into the 80px range.
+- Medium radius — softer than tech-tool variants. Corners feel rounded but not playful.
+- Smooth deliberate motion in the 200-300ms range, ease-in-out by default, with occasional spring physics reserved for delight moments (success states, surface entrances).
+- Layered shadows — multiple elevation levels using two-layer composition (close + distant). Real depth, not flat drop shadows.
+- Premium typographic touches — controlled letter-spacing on display sizes, capable display scale for hero treatments.
+
+## Token categories covered
+
+Color (background, surface, border, text, primary action, secondary, status, optional gradient for hero), typography (sans + optional serif + mono families, full size + weight + leading + tracking scales), spacing (generous, scaling into the 80px range), sizing (control heights and container max-widths), radius (small through extra-large plus full), shadows (multiple layered elevation levels plus a focus ring), motion (fast / medium / slow), easing (out, in, in-out, plus a spring curve for delight).
+
+## Claude Design prompts
+
+### Setup prompt
+
+```
+You are setting up a frontend project anchored on the Stripe-flavored aesthetic.
+
+The aesthetic:
+- Light-default surfaces with rich purples and blues (blurple lineage) for action.
+- Warm neutral grays. Near-black foreground, not pure black.
+- Refined sans for product surfaces, optional serif for editorial headings.
+- Generous spacing - surfaces breathe, scale runs into the 80px range.
+- Medium radius scale - rounded but not playful.
+- Smooth deliberate motion in the 200-300ms range, ease-in-out default.
+- Layered shadows - multi-level elevation with close + distant composition.
+- Spring easing reserved for delight moments only.
+
+Generate a complete tokens.json covering color, typography, spacing, sizing, radius, shadows, motion, and easing. Specific values should reflect the variant's character - rich blurple primaries, warm near-black text, layered shadow stack, generous spacing scale, medium radius progression.
+
+Output as JSON, then output the same tokens as CSS custom properties on :root with a [data-theme="dark"] override that flips background, surface, border, and text scales while preserving primary, secondary, and status hues.
+
+Confirm the tokens are wired before generating any component.
+```
+
+### Component prompt
+
+```
+You are generating a [COMPONENT_TYPE] anchored on the Stripe-flavored aesthetic.
+
+The aesthetic:
+- Confident, premium, slightly warm. Light default.
+- Rich blurple primaries for action, blue secondary for links and information.
+- Warm near-black text, soft off-white surfaces.
+- Generous spacing - container padding leans large.
+- Medium radius - rounded but not playful.
+- Layered shadows for elevation - two-layer composition (close + distant).
+- Smooth motion at ~250ms with ease-in-out default, spring only on a single delight moment per component.
+
+Use only token references (assume tokens like --color-fg, --color-primary, --space-md, --radius-md, --motion-medium, --ease-in-out, --shadow-md exist in the project). No hard-coded values.
+
+Cover all states: default, hover, focus-visible (with a soft alpha focus ring), active, disabled, loading if applicable, error if applicable.
+
+Type sizes from the project scale. Body is 16px minimum.
+
+Return as HTML+CSS or React+CSS. Inline styles or a single colocated style block.
+```
+
+### Review prompt
+
+```
+You are reviewing a UI component against the Stripe-flavored aesthetic standards.
+
+The aesthetic:
+- Light-default, confident, premium, slightly warm.
+- Rich blurple action, blue secondary, warm near-black text.
+- Generous spacing - surfaces breathe.
+- Medium radius - softer than tech-tool variants.
+- Layered shadows for elevation - two-layer composition.
+- Motion in the 200-300ms range, ease-in-out default, spring sparingly.
+
+Audit the component against this standard. Walk every dimension and flag anything below bar:
+
+1. Spacing rhythm - is container padding generous? Cramped layouts break the premium tone.
+2. Alignment - does the visual rhythm hold across header, body, action zones?
+3. Type hierarchy - are sizes from the project scale? Is heading weight consistent? If serif is in use, only headings take it.
+4. State coverage - default, hover, focus-visible, active, disabled all defined?
+5. Motion timing - is interaction feedback in the 200-300ms range?
+6. Easing curves - ease-in-out or ease-out for most transitions? Spring used at most once and only for delight?
+7. Color usage - blurple on action only, blue on links and information, status colors only for status. No gradient on UI surfaces.
+8. Elevation - are shadows layered (two values, close + distant)? Single-layer drop shadows read flat.
+
+Categorize findings as Block / Fix-First / Note. Block = ships wrong. Fix-First = ship after this is fixed. Note = take or leave.
+```
+
+## Other variants
+
+<CardGroup cols={3}>
+  <Card title="Variant catalog" href="/frontend/design-tokens/index">
+    All variants and how to choose.
+  </Card>
+  <Card title="Radix" href="/frontend/design-tokens/radix">
+    Accessible defaults, neutral tone.
+  </Card>
+  <Card title="Linear" href="/frontend/design-tokens/linear">
+    Dense, fast, dark-leaning product UI.
+  </Card>
+  <Card title="Vercel" href="/frontend/design-tokens/vercel">
+    Minimalist, sharp, dark-default dev tools.
+  </Card>
+  <Card title="Tailwind" href="/frontend/design-tokens/tailwind">
+    Opinionated defaults, maximum flexibility.
+  </Card>
+</CardGroup>

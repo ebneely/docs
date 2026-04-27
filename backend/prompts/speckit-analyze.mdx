@@ -127,13 +127,13 @@ The five report sections are context. The verdict is the action. If you find you
     The five report sections are context; the verdict is the action. If the verdict is missing or malformed, re-run the prompt — that is the only mandatory output.
   </Step>
   <Step title="If READY">
-    Ship. Update the [manifest](/backend/workflow/module-manifest) with any [ADRs](/glossary) the open-questions section surfaced. Move on.
+    Ship. Update the [manifest](/backend/workflow/module-manifest) with any [ADRs](/backend/glossary) the open-questions section surfaced. Move on.
   </Step>
   <Step title="If FIX-FIRST">
     Address the named issues. Re-run `/speckit.analyze` to confirm the verdict moves to `READY`. Do not ship on a `FIX-FIRST` verdict.
   </Step>
   <Step title="If RETURN-TO-STAGE-1">
-    Stop. The implementation revealed a design problem the spec did not catch. Switch to Obsidian with Opus, update the manifest, add an [ADR](/glossary) explaining the gap, then restart Stage 2 from [/speckit.specify](/backend/prompts/speckit-specify).
+    Stop. The implementation revealed a design problem the spec did not catch. Switch to Obsidian with Opus, update the manifest, add an [ADR](/backend/glossary) explaining the gap, then restart Stage 2 from [/speckit.specify](/backend/prompts/speckit-specify).
   </Step>
 </Steps>
 

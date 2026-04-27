@@ -1,10 +1,112 @@
 ---
 title: "New component"
-description: "(WIP) End-to-end flow for shipping a new UI component"
+description: "End-to-end flow for shipping a new UI component"
 ---
 
 # New component
 
+This is the canonical frontend workflow. Most components follow it. Like [/backend/workflows/new-module](/backend/workflows/new-module), depth scales with the project's [wave](/backend/workflow/waves) — lighter at W1, full at W3+ — but the order of steps stays constant.
+
+If a step surfaces a question you cannot answer, stop. Return to the design phase, fix the mockup, restart the affected steps. Do not patch around design questions inside the implementation.
+
+## When to use
+
+- Any new component being added to the codebase.
+- A significant refactor of an existing component (treat as a new component).
+
+For trivial style fixes, text changes, or content updates, skip the flow. See "When NOT to use" below.
+
+## The flow
+
+<Steps>
+  <Step title="Confirm design tokens are in place">
+    If no variant is picked yet, choose one from [/frontend/design-tokens/index](/frontend/design-tokens/index). Tokens are the design's lowest layer; nothing else can be polished without them.
+
+    Output: a locked token set the rest of the flow references.
+  </Step>
+
+  <Step title="Design phase">
+    Identify the component layer — primitive, composition, or page. See [Component thinking](/frontend/mindset/components). Sketch what the component does, what it looks like, and what states it has.
+
+    Output: a one-page sketch covering scope, states, and interaction model. No code yet.
+  </Step>
+
+  <Step title="Generate a high-fidelity mockup">
+    Use the variant's component-generation prompt — each [variant page](/frontend/design-tokens/index) has one. The mockup must be complete enough to ship without further interpretation.
+
+    Output: a mockup that pins down spacing, type, color, motion, and every state from step 2.
+  </Step>
+
+  <Step title="Review the mockup">
+    Does it match the variant's tokens? Does it cover all states — default, hover, focus, active, disabled, loading, error, empty? If no, iterate the mockup, not the eventual code.
+
+    Output: an approved mockup, or a return to step 3 with stricter constraints.
+  </Step>
+
+  <Step title="Generate implementation code from the mockup">
+    Code should mirror the mockup pixel-perfect. See [Design first](/frontend/mindset/design-first) for why drift between mockup and code is a failure mode.
+
+    Output: a component implementation aligned to the approved mockup.
+  </Step>
+
+  <Step title="Run the polish review">
+    See [Design review](/frontend/workflows/design-review). The polish review checks spacing rhythm, alignment, type hierarchy, state coverage, motion, easing, color usage, and empty states.
+
+    Output: findings categorized as Pass, Fix-first, or Return-to-design.
+  </Step>
+
+  <Step title="Run the accessibility audit">
+    See [Accessibility audit](/frontend/workflows/accessibility-audit). Audit covers keyboard, screen reader, contrast, focus management, and state indicators.
+
+    Output: findings categorized as Critical, High, Medium, or Note. Critical blocks ship.
+  </Step>
+
+  <Step title="Integrate and ship">
+    Wire the component into the codebase. Confirm the mockup-to-code match held end-to-end. Merge.
+  </Step>
+</Steps>
+
+## Wave-aware notes
+
 <Note>
-This page is a placeholder. Real content coming soon.
+At W1, design review and accessibility audit are lighter — a checklist pass against the must-haves. At W3+, both are full reviews with formal audit artifacts and tooling-gated checks. The flow does not change — its depth does. See [Waves](/backend/workflow/waves).
+</Note>
+
+## Common diversions
+
+<AccordionGroup>
+  <Accordion title="What if the mockup looks generic?">
+    The tokens probably aren't tight enough. Revisit token choice — see [/frontend/design-tokens/index](/frontend/design-tokens/index) — or override locally for the component. Generic mockups are a token problem, not a prompt problem.
+  </Accordion>
+
+  <Accordion title="What if implementation drifts from the mockup?">
+    Return to the mockup. Regenerate the code with stricter alignment instructions. Do not try to patch drift in code — it compounds, and the next component starts from a worse baseline.
+  </Accordion>
+
+  <Accordion title="What if polish review fails?">
+    Do not ship. Iterate the mockup, not the code. Polish failures are usually design failures, not implementation failures — the code did what the mockup told it to do.
+  </Accordion>
+
+  <Accordion title="What if a component already exists that does 80% of what you need?">
+    Extend it via variant props. See [Component thinking](/frontend/mindset/components). Forking is the wrong move — it doubles the maintenance surface and lets the two copies drift.
+  </Accordion>
+</AccordionGroup>
+
+## When NOT to use this flow
+
+Trivial style fixes (one-character CSS tweaks), text changes, and content updates do not need the full flow. They are commits, not workflows. The flow exists for cases where design and implementation can drift — for everything else, it is overhead.
+
+## Where to go next
+
+<CardGroup cols={2}>
+  <Card title="Design review" href="/frontend/workflows/design-review">
+    The polish gate after code is generated.
+  </Card>
+  <Card title="Accessibility audit" href="/frontend/workflows/accessibility-audit">
+    The accessibility gate, paired with design review.
+  </Card>
+</CardGroup>
+
+<Note>
+**TBD — Volta to verify:** the exact prompt-to-prompt flow Volta uses with Claude Design (or whichever visual tool). The 8-step shape above is the generic canonical flow; Volta's specific protocol may include extra steps (e.g. token-set verification, explicit mockup-acceptance gates) or skip steps depending on component type.
 </Note>

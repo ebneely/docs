@@ -1,10 +1,27 @@
 ---
 title: "Decision trees"
-description: "(WIP) After Claude responds, decide what to do next — frontend"
+description: "After Claude Design responds, decide what to do next — frontend"
 ---
 
 # Decision trees
 
+Frontend decision trees are still being written based on real frontend workflow experience. They will follow the same pattern as the backend trees: each tree starts where a Claude Design step finishes, and walks you to a single next action.
+
 <Note>
-This page is a placeholder. Real content coming soon.
+Most frontend decisions are currently embedded inline in the [workflow pages](/frontend/workflows/index) — what to do after design review, what to do after an accessibility audit, what to do when a mockup looks generic. They will graduate to dedicated decision trees here once Volta has run real frontend work with the playbook and discovered which decisions repeat enough to warrant their own page.
 </Note>
+
+## Pattern these will follow
+
+See [/backend/decisions/index](/backend/decisions/index). Each tree there is a `<Steps>` walking condition to action to next. Frontend trees will use the same shape — the artifacts differ (mockups, audit reports), the structure does not.
+
+## Where to go in the meantime
+
+<CardGroup cols={2}>
+  <Card title="Workflows" href="/frontend/workflows/index">
+    The flow pages where current decisions live inline.
+  </Card>
+  <Card title="Backend decisions" href="/backend/decisions/index">
+    The pattern these will eventually follow.
+  </Card>
+</CardGroup>

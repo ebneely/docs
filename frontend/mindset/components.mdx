@@ -1,10 +1,96 @@
 ---
 title: "Component thinking"
-description: "(WIP) Building reusable, composable, well-typed UI primitives"
+description: "Build primitives, compose from primitives, never duplicate"
 ---
 
 # Component thinking
 
+Components are the unit of frontend work, the way modules are the unit of backend work. You build them once, name them well, and compose larger things out of them.
+
+Components have similar properties to a backend [module](/backend/workflow/module-manifest) — clear scope, defined interface, reusable, testable — but the contract is visual + behavioral, not API + data. A component's edges are its props and its rendered output.
+
+## Three layers
+
+<CardGroup cols={3}>
+  <Card title="Primitives" icon="cube">
+    Button, Input, Card, Box, Stack.
+
+    The atoms. Built once, never duplicated. Pull directly from design tokens.
+  </Card>
+  <Card title="Compositions" icon="cubes-stacked">
+    LoginForm, ProductCard, NavBar, DataTable.
+
+    Assembled from primitives. Carry domain meaning. Reused across pages.
+  </Card>
+  <Card title="Pages / Layouts" icon="window">
+    Full screens. Settings, Checkout, Dashboard.
+
+    Assembled from compositions. Where routing, data fetching, and layout shells live.
+  </Card>
+</CardGroup>
+
+## The composition rule
+
+<Warning>
+Never reach down a layer. Pages compose from compositions, not from primitives directly. Compositions compose from primitives. Skipping a layer creates duplication and breaks the design system at scale.
+
+If a page needs a primitive directly, it is a signal: either the primitive is being misused, or a composition is missing.
+</Warning>
+
+The rule sounds bureaucratic. It is actually how the design system stays consistent without constant policing. Each layer is responsible for one shape of decision. Mixing layers smears those decisions across the codebase.
+
+## Props as the contract
+
+Each component's props are its API. Bad props create bad components.
+
+- **Required vs optional with sensible defaults** — required props for things that genuinely have no default (the label on a button, the value of an input). Everything else has a default.
+- **Variant props over boolean flags** — `<Button variant="primary" size="md">` not `<Button isPrimary isLarge>`. Variants compose; booleans don't. Two booleans means four states; three booleans means eight; the surface area explodes.
+- **Composition props over rigid layouts** — `children` and slot patterns over fixed structure. Lets the composition layer above add what it needs without forking the primitive.
+
+A primitive's prop surface should fit on one screen. If it doesn't, the primitive is doing too much, or its variants should be separate components.
+
+## Naming
+
+Components are named by what they ARE (Button), not what they DO (SubmitForm) or where they live (HomePageHero). Names that describe role become reusable. Names that describe context become brittle.
+
+A `LoginButton` belongs in one place. A `Button variant="primary"` belongs anywhere.
+
+The same rule applies up the layers. `ProductCard` is a role; `FeaturedProductCardForHomepage` is a location and three rewrites away from being deleted.
+
+## The anti-pattern
+
+<Warning>
+Generating component code without designing the component first. Visual-aware tools will generate plausible components from vague requests — "make a card," "build a form." The result is many similar-looking components doing slightly different things, all named slightly differently, none reusable.
+
+The fix is upstream. Components are designed before they are coded. See [Design first](/frontend/mindset/design-first).
+</Warning>
+
+## The duplication smell
+
+When you write the same component twice — even with small differences — stop. The signal is: the second version belongs as a variant of the first, or both belong inside a third more general primitive.
+
+Duplication in components is debt that compounds. Two Buttons today is twelve buttons next quarter, none of which agree on hover state.
+
+## Wave-aware components
+
+Component depth scales with [wave](/backend/workflow/waves). At W1, you build the primitives you need and skip the rest. At W3, you have a full primitive library, documented variants, and a discipline against ad-hoc one-offs.
+
+The three-layer rule does not change. The breadth does.
+
 <Note>
-This page is a placeholder. Real content coming soon.
+**TBD — Volta to verify:** Volta's preferred naming conventions, prop patterns (variant taxonomy, default-prop philosophy), and component library structure (atomic design? shadcn-style? custom hierarchy?). The above is the generic shape.
 </Note>
+
+## Where to go next
+
+<CardGroup cols={3}>
+  <Card title="Design first" href="/frontend/mindset/design-first">
+    Why components start with design, not code.
+  </Card>
+  <Card title="Polish" href="/frontend/mindset/polish">
+    The standard each component aspires to.
+  </Card>
+  <Card title="Design tokens" href="/frontend/design-tokens/index">
+    Where component visuals come from.
+  </Card>
+</CardGroup>
