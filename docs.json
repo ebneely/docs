@@ -16,7 +16,7 @@
         "groups": [
           {
             "group": "Start here",
-            "pages": ["index"]
+            "pages": ["index", "search"]
           }
         ]
       },
@@ -107,16 +107,10 @@
     ]
   },
   "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
-      }
-    ],
     "primary": {
       "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
+      "label": "Search",
+      "href": "/search"
     }
   },
   "contextual": {

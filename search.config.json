@@ -1,0 +1,34 @@
+{
+  "$comment": "Edit this file when forking the playbook for a new project. The indexer reads it; the search UI reads the generated index.",
+
+  "projectName": "Volta's Workflow Playbook",
+
+  "model": "Xenova/all-MiniLM-L6-v2",
+  "modelDimension": 384,
+  "transformersVersion": "2.17.2",
+
+  "outputPath": "assets/search-index.js",
+
+  "include": ["**/*.mdx"],
+  "exclude": [
+    "node_modules/**",
+    "snippets/**",
+    ".mintlify/**",
+    "essentials/**",
+    "ai-tools/**",
+    "search.mdx"
+  ],
+
+  "chunking": {
+    "splitBy": "heading",
+    "maxChars": 1400,
+    "minChars": 60
+  },
+
+  "ui": {
+    "topK": 8,
+    "minScore": 0.2,
+    "placeholder": "Search the playbook (semantic — typos and synonyms okay)...",
+    "emptyHint": "Try: 'how do I set up tokens', 'when to use riper', 'wave bump checklist'..."
+  }
+}

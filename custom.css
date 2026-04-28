@@ -1,0 +1,20 @@
+/* ---------------------------------------------------------------------------
+ * Custom overrides for the playbook.
+ *
+ * Mintlify auto-applies any .css file in this repo site-wide. Keep this file
+ * focused on chrome overrides — page-level styles belong in MDX.
+ * ------------------------------------------------------------------------- */
+
+/* Hide Mintlify's built-in search button (header desktop + mobile).
+   Reason: the playbook is local-only and not signed in, so Mintlify's
+   cloud search shows "Login into CLI to enable search" — useless to us.
+   Our vector search lives at /search instead. */
+#search-bar-entry,
+#search-bar-entry-mobile {
+  display: none !important;
+}
+
+/* If the broken search modal ever opens anyway, neutralize its backdrop. */
+[role="dialog"][aria-label*="earch"] {
+  display: none !important;
+}
